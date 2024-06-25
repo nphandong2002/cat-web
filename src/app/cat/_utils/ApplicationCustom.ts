@@ -1,3 +1,5 @@
+"use client";
+
 import { Stage } from "@pixi/layers";
 import { Application, TickerPlugin } from "pixi.js";
 
@@ -10,11 +12,11 @@ export class ApplicationCustom extends Application {
       backgroundAlpha: 0,
       clearBeforeRender: true,
       context: null,
-      antialias: false,
+      antialias: true,
       powerPreference: "default",
-      premultipliedAlpha: false,
-      preserveDrawingBuffer: false,
-      hello: false,
+      premultipliedAlpha: true,
+      preserveDrawingBuffer: true,
+      hello: true,
     });
     this.stage = new Stage();
     this.renderer.plugins.interaction.autoPreventDefault = false;
