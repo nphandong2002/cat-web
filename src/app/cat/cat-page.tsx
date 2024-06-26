@@ -33,7 +33,6 @@ export default function CatPage() {
   useEffect(() => {
     if (renderManager.petLayer && canvasref.current && renderManager.resources && renderManager.app) {
       renderManager.petLayer.setSkin(skinName);
-      console.log(renderManager.app);
     }
   }, [renderManager, skinName, canvasref]);
   useEffect(() => {
@@ -44,8 +43,11 @@ export default function CatPage() {
       Assets.load(["cat"]).then((a) => {
         if (canvasref.current) {
           let appinit = new ApplicationCustom();
-          let layer = new CatLayer(a);
-          appinit.stage.addChild(layer.bottomContainer);
+          let layer = new CatLayer(a, {
+            height: appinit.view.height,
+            width: appinit.view.width,
+          });
+          appinit.pets.addChild(layer.rendererContainer);
           canvasref.current.innerHTML = "";
           canvasref.current.appendChild(appinit.view as unknown as Node);
           setrenderManager((b) => ({
@@ -67,7 +69,7 @@ export default function CatPage() {
             onClick={() => setskinName(pet.tag)}
             src={`/skins/${pet.preview_loc}`}
             alt={pet.name}
-            className={"h-[64px] w-[64px] " + (pet.name == skinName ? "bg-blue-500" : "")}
+            className={"h-[64px] w-[64px] " + (pet.tag == skinName ? "bg-blue-500" : "")}
             width="100"
             height="100"
           />

@@ -214,7 +214,7 @@ export const listPetPro = [
   },
 ];
 
-export const action = [
+export const idleType = [
   "idle",
   "jump",
   "walk",
@@ -236,4 +236,4 @@ export const action = [
   "shoot-bow",
 ];
 export const feeling = ["sad", "thanks", "please", "slide"];
-export const action2 = ["dead", "sleep", "lick", "dig", "mad", "sit", "sit-sad", "fish-hook", "fish-catch", "fish", "fish-catch"];
+export const action = ["dead", "sleep", "lick", "dig", "mad", "sit", "sit-sad", "fish-hook", "fish-catch", "fish", "fish-catch"];
