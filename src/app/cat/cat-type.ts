@@ -16,6 +16,8 @@ export type optionLayerType = viewportType & {};
 export type statsType = {
   posLeft: number;
   posTop: number;
+  animation: string;
+
   direction: "right" | "left";
   walk: boolean;
   talk: boolean;
