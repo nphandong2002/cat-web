@@ -1,24 +1,25 @@
-"use client";
+'use client';
 
-import { Layer, Stage } from "@pixi/layers";
-import { Application, Container, TickerPlugin } from "pixi.js";
+import { Layer, Stage } from '@pixi/layers';
+import { Application, Container, TickerPlugin } from 'pixi.js';
 
 !Application._plugins.includes(TickerPlugin) && Application._plugins.push(TickerPlugin);
 
 export class ApplicationCustom extends Application {
   layer: Layer;
   pets: Container;
-  constructor() {
+  constructor(op: any) {
     super({
-      backgroundColor: "#fff",
+      backgroundColor: '#fff',
       backgroundAlpha: 0,
       clearBeforeRender: true,
       context: null,
       antialias: true,
-      powerPreference: "default",
+      powerPreference: 'default',
       premultipliedAlpha: true,
       preserveDrawingBuffer: true,
       hello: true,
+      ...op,
     });
     this.layer = new Layer();
     this.layer.group.enableSort = true;
@@ -29,7 +30,7 @@ export class ApplicationCustom extends Application {
     this.stage.addChild(this.layer);
     this.stage.addChild(this.pets);
     this.renderer.plugins.interaction.autoPreventDefault = false;
-    this.renderer.view.style && (this.renderer.view.style.touchAction = "auto");
+    this.renderer.view.style && (this.renderer.view.style.touchAction = 'auto');
     this.ticker.maxFPS = 60;
   }
 }
