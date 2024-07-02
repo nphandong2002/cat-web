@@ -1,18 +1,19 @@
-import { ISkeletonData, ISkeletonParser, TextureAtlas, BinaryInput } from "@pixi-spine/base";
-import { type AssetExtension, LoaderParserPriority, LoadAsset, checkExtension } from "@pixi/assets";
-import { ExtensionType, settings, utils } from "@pixi/core";
-import type { ISpineMetadata } from "@pixi-spine/loader-base";
-import { ISpineResource } from "@pixi-spine/loader-base";
-import * as spine38 from "@pixi-spine/runtime-3.8";
-import * as spine37 from "@pixi-spine/runtime-3.7";
-import * as spine41 from "@pixi-spine/runtime-4.1";
-import { SPINE_VERSION, detectSpineVersion } from "./versions";
-import { makeSpineTextureAtlasLoaderFunctionFromPixiLoaderObject } from "./makeSpineTextureAtlasLoader";
+import { ISkeletonData, ISkeletonParser, TextureAtlas, BinaryInput } from '@pixi-spine/base';
+import { type AssetExtension, LoaderParserPriority, checkExtension } from '@pixi/assets';
+import { ExtensionType, settings, utils } from '@pixi/core';
+import type { ISpineMetadata } from '@pixi-spine/loader-base';
+import { ISpineResource } from '@pixi-spine/loader-base';
+import * as spine38 from '@pixi-spine/runtime-3.8';
+import * as spine37 from '@pixi-spine/runtime-3.7';
+import * as spine41 from '@pixi-spine/runtime-4.1';
+import { SPINE_VERSION, detectSpineVersion } from './versions';
+import { makeSpineTextureAtlasLoaderFunctionFromPixiLoaderObject } from './makeSpineTextureAtlasLoader';
+import { ResolvedAsset } from 'pixi.js';
 
 type SPINEJSON = any;
 type SPINEBINARY = ArrayBuffer;
 function isJson(resource: any): resource is SPINEJSON {
-  return resource.hasOwnProperty("bones");
+  return resource.hasOwnProperty('bones');
 }
 
 function isBuffer(resource: unknown): resource is SPINEBINARY {
@@ -27,7 +28,8 @@ class UniBinaryParser implements ISkeletonParser {
     if (ver === SPINE_VERSION.VER38) parser = new spine38.SkeletonBinary(new spine38.AtlasAttachmentLoader(atlas));
     version = this.readVersionNewFormat(dataToParse);
     ver = detectSpineVersion(version);
-    if (ver === SPINE_VERSION.VER40 || ver === SPINE_VERSION.VER41) parser = new spine41.SkeletonBinary(new spine41.AtlasAttachmentLoader(atlas));
+    if (ver === SPINE_VERSION.VER40 || ver === SPINE_VERSION.VER41)
+      parser = new spine41.SkeletonBinary(new spine41.AtlasAttachmentLoader(atlas));
     if (!parser) console.error(`Unsupported version of spine model ${version}, please update pixi-spine`);
     parser.scale = this.scale;
     return parser.readSkeletonData(dataToParse);
@@ -40,10 +42,10 @@ class UniBinaryParser implements ISkeletonParser {
       input.readString();
       version = input.readString();
     } catch (e) {
-      version = "";
+      version = '';
     }
 
-    return version || "";
+    return version || '';
   }
 
   readVersionNewFormat(dataToParse: Uint8Array) {
@@ -54,9 +56,9 @@ class UniBinaryParser implements ISkeletonParser {
     try {
       version = input.readString();
     } catch (e) {
-      version = "";
+      version = '';
     }
-    return version || "";
+    return version || '';
   }
 }
 
@@ -68,7 +70,8 @@ class UniJsonParser implements ISkeletonParser {
     let parser: any = null;
     if (ver === SPINE_VERSION.VER37) parser = new spine37.SkeletonJson(new spine37.AtlasAttachmentLoader(atlas));
     if (ver === SPINE_VERSION.VER38) parser = new spine38.SkeletonJson(new spine38.AtlasAttachmentLoader(atlas));
-    if (ver === SPINE_VERSION.VER40 || ver === SPINE_VERSION.VER41) parser = new spine41.SkeletonJson(new spine41.AtlasAttachmentLoader(atlas));
+    if (ver === SPINE_VERSION.VER40 || ver === SPINE_VERSION.VER41)
+      parser = new spine41.SkeletonJson(new spine41.AtlasAttachmentLoader(atlas));
     if (!parser) console.error(`Unsupported version of spine model ${version}, please update pixi-spine`);
     parser.scale = this.scale;
     return parser.readSkeletonData(dataToParse);
@@ -82,7 +85,10 @@ const parseData = (parser: ISkeletonParser, atlas: TextureAtlas, dataToParse: an
     spineAtlas: atlas,
   };
 };
-export const spineLoaderExtension: AssetExtension<SPINEJSON | SPINEBINARY | ISpineResource<ISkeletonData>, ISpineMetadata> = {
+export const spineLoaderExtension: AssetExtension<
+  SPINEJSON | SPINEBINARY | ISpineResource<ISkeletonData>,
+  ISpineMetadata
+> = {
   extension: ExtensionType.Asset,
   loader: {
     extension: {
@@ -90,7 +96,7 @@ export const spineLoaderExtension: AssetExtension<SPINEJSON | SPINEBINARY | ISpi
       priority: LoaderParserPriority.Normal,
     },
     test(url) {
-      return checkExtension(url, ".skel");
+      return checkExtension(url, '.skel');
     },
 
     async load<SPINEBINARY>(url: string): Promise<SPINEBINARY> {
@@ -99,19 +105,19 @@ export const spineLoaderExtension: AssetExtension<SPINEJSON | SPINEBINARY | ISpi
       return buffer as SPINEBINARY;
     },
 
-    testParse(asset: unknown, options: LoadAsset): Promise<boolean> {
-      const isJsonSpineModel = checkExtension(options.src, ".json") && isJson(asset);
-      const isBinarySpineModel = checkExtension(options.src, ".skel") && isBuffer(asset);
+    testParse(asset: unknown, options: any): Promise<boolean> {
+      const isJsonSpineModel = checkExtension(options.src, '.json') && isJson(asset);
+      const isBinarySpineModel = checkExtension(options.src, '.skel') && isBuffer(asset);
       const isMetadataAngry = options.data?.spineAtlas === false;
       return Promise.resolve((isJsonSpineModel && !isMetadataAngry) || isBinarySpineModel);
     },
-    async parse(asset: SPINEJSON | SPINEBINARY, loadAsset: LoadAsset, loader: any): Promise<ISpineResource<ISkeletonData>> {
+    async parse(asset: SPINEJSON | SPINEBINARY, loadAsset: any, loader: any): Promise<ISpineResource<ISkeletonData>> {
       const fileExt = utils.path.extname(loadAsset.src).toLowerCase();
       const fileName = utils.path.basename(loadAsset.src, fileExt);
       let basePath = utils.path.dirname(loadAsset.src);
 
-      if (basePath && basePath.lastIndexOf("/") !== basePath.length - 1) basePath += "/";
-      const isJsonSpineModel = checkExtension(loadAsset.src, ".json") && isJson(asset);
+      if (basePath && basePath.lastIndexOf('/') !== basePath.length - 1) basePath += '/';
+      const isJsonSpineModel = checkExtension(loadAsset.src, '.json') && isJson(asset);
       let parser: ISkeletonParser = new UniBinaryParser();
       let dataToParse = asset;
       if (isJsonSpineModel) parser = new UniJsonParser();
@@ -131,12 +137,18 @@ export const spineLoaderExtension: AssetExtension<SPINEJSON | SPINEBINARY | ISpi
           auxResolve = resolve;
           auxReject = reject;
         });
-        const atlas = new TextureAtlas(textAtlas, makeSpineTextureAtlasLoaderFunctionFromPixiLoaderObject(loader, basePath, metadata.imageMetadata), (newAtlas) => {
-          if (!newAtlas) {
-            auxReject("Something went terribly wrong loading a spine .atlas file\nMost likely your texture failed to load.");
+        const atlas = new TextureAtlas(
+          textAtlas,
+          makeSpineTextureAtlasLoaderFunctionFromPixiLoaderObject(loader, basePath, metadata.imageMetadata),
+          (newAtlas) => {
+            if (!newAtlas) {
+              auxReject(
+                'Something went terribly wrong loading a spine .atlas file\nMost likely your texture failed to load.'
+              );
+            }
+            auxResolve(atlas);
           }
-          auxResolve(atlas);
-        });
+        );
         const textureAtlas = await atlasPromise;
         return parseData(parser, textureAtlas, dataToParse);
       }

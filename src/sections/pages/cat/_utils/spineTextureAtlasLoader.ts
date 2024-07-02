@@ -1,5 +1,5 @@
 import { TextureAtlas } from "@pixi-spine/base";
-import { type AssetExtension, LoaderParserPriority, LoadAsset, Loader, checkExtension } from "@pixi/assets";
+import { type AssetExtension, LoaderParserPriority, Loader, checkExtension } from "@pixi/assets";
 import { ExtensionType, settings, utils } from "@pixi/core";
 import type { ISpineMetadata } from "@pixi-spine/loader-base";
 import { makeSpineTextureAtlasLoaderFunctionFromPixiLoaderObject } from "./makeSpineTextureAtlasLoader";
@@ -14,7 +14,7 @@ export const spineTextureAtlasLoader: AssetExtension<RawAtlas | TextureAtlas, IS
       priority: LoaderParserPriority.Normal,
     },
     test(url: string): boolean {
-      return checkExtension(url, ".atlas");
+      return checkExtension(url, '.atlas');
     },
     async load(url: string): Promise<RawAtlas> {
       const response = await settings.ADAPTER.fetch(url);
@@ -22,16 +22,16 @@ export const spineTextureAtlasLoader: AssetExtension<RawAtlas | TextureAtlas, IS
       return txt as RawAtlas;
     },
 
-    testParse(asset: unknown, options: LoadAsset): Promise<boolean> {
-      const isExtensionRight = checkExtension(options.src, ".atlas");
-      const isString = typeof asset === "string";
+    testParse(asset: unknown, options: any): Promise<boolean> {
+      const isExtensionRight = checkExtension(options.src, '.atlas');
+      const isString = typeof asset === 'string';
       return Promise.resolve(isExtensionRight && isString);
     },
 
-    async parse(asset: RawAtlas, options: LoadAsset, loader: Loader): Promise<TextureAtlas> {
+    async parse(asset: RawAtlas, options: any, loader: Loader): Promise<TextureAtlas> {
       const metadata: ISpineMetadata = options.data;
       let basePath = utils.path.dirname(options.src);
-      if (basePath && basePath.lastIndexOf("/") !== basePath.length - 1) basePath += "/";
+      if (basePath && basePath.lastIndexOf('/') !== basePath.length - 1) basePath += '/';
       let resolve = (value: TextureAtlas | PromiseLike<TextureAtlas>) => {};
       let reject = (reason?: any) => {};
       const retPromise = new Promise<TextureAtlas>((res, rej) => {
@@ -40,7 +40,8 @@ export const spineTextureAtlasLoader: AssetExtension<RawAtlas | TextureAtlas, IS
       });
       let retval = new TextureAtlas();
       const resolveCallback = (newAtlas: TextureAtlas): void => {
-        if (!newAtlas) reject("Something went terribly wrong loading a spine .atlas file\nMost likely your texture failed to load.");
+        if (!newAtlas)
+          reject('Something went terribly wrong loading a spine .atlas file\nMost likely your texture failed to load.');
         resolve(retval);
       };
       if (metadata.image || metadata.images) {
@@ -55,7 +56,11 @@ export const spineTextureAtlasLoader: AssetExtension<RawAtlas | TextureAtlas, IS
           resolveCallback
         );
       } else {
-        retval = new TextureAtlas(asset as RawAtlas, makeSpineTextureAtlasLoaderFunctionFromPixiLoaderObject(loader, basePath, metadata.imageMetadata), resolveCallback);
+        retval = new TextureAtlas(
+          asset as RawAtlas,
+          makeSpineTextureAtlasLoaderFunctionFromPixiLoaderObject(loader, basePath, metadata.imageMetadata),
+          resolveCallback
+        );
       }
       return (await retPromise) as TextureAtlas;
     },

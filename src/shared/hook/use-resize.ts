@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 
 export default function useResize(cb: EventListenerOrEventListenerObject) {
   useEffect(() => {
@@ -8,5 +8,5 @@ export default function useResize(cb: EventListenerOrEventListenerObject) {
     return () => {
       window.removeEventListener('resize', cb);
     };
-  }, []);
+  }, [cb]);
 }

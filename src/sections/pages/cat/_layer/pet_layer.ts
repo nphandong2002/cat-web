@@ -1,21 +1,19 @@
-import { ISpineResource } from "@pixi-spine/loader-base";
-import { Layer } from "@pixi/layers";
-import { ISkeletonData, ISkin } from "pixi-spine";
-import { Skin, Spine, SkeletonData, RegionAttachment } from "@pixi-spine/runtime-4.1";
-import { Container, Sprite, Texture } from "pixi.js";
-import { optionLayerType, positionType, resourcesType, statsType, viewportType } from "./cat-type";
-import { idleType, action, feeling, zindex } from "./cat-config";
+import { Container } from 'pixi.js';
+import { Skin, Spine, SkeletonData } from '@pixi-spine/runtime-4.1';
+
+import { idleType, action, feeling, zindex } from '../cat-config';
+import { optionLayerType, resourcesType, statsType, viewportType } from '../cat-type';
 
 var n = idleType,
   i = feeling,
   a = action,
   versionPet = [
-    { v: "v1", skin: [] },
-    { v: "v2", skin: ["husky", "choco", "cheetah"] },
-    { v: "v3", skin: ["koala"] },
-    { v: "v4", skin: ["howie"] },
+    { v: 'v1', skin: [] },
+    { v: 'v2', skin: ['husky', 'choco', 'cheetah'] },
+    { v: 'v3', skin: ['koala'] },
+    { v: 'v4', skin: ['howie'] },
   ];
-export class CatLayer {
+export class PetLayer {
   private resources: resourcesType;
   private stats: statsType;
   private rendererPet: Spine;
@@ -30,25 +28,25 @@ export class CatLayer {
     this.stats = {
       level: 0,
       posLeft: this.viewport.width / 2,
-      direction: "right",
+      direction: 'right',
       posTop: this.viewport.height,
       animation: idleType[0],
       walk: !0,
       talk: !0,
-      name: "",
-      clowderName: "",
-      idleType: "idle",
-      skin: "meow",
-      eyes: "",
-      hat: "",
-      glasses: "",
-      mask: "",
-      wings: "",
-      costume: "",
-      faceMask: "",
-      companion: "",
-      rod: "rod1",
-      walkType: "BOTTOM",
+      name: '',
+      clowderName: '',
+      idleType: 'idle',
+      skin: 'meow',
+      eyes: '',
+      hat: '',
+      glasses: '',
+      mask: '',
+      wings: '',
+      costume: '',
+      faceMask: '',
+      companion: '',
+      rod: 'rod1',
+      walkType: 'BOTTOM',
     };
     this.rendererPet = new Spine(resources.cat.spineData as SkeletonData);
     this.rendererContainer = new Container();
@@ -94,11 +92,11 @@ export class CatLayer {
     this.stats.posTop = this.viewport.height;
   }
   changeSkin(skin: string) {
-    this.stats.skin = (this.resources.cat.spineData.findSkin("skins/" + skin) && skin) || "meow";
-    this.rendererPet.skeleton.setSkinByName("skins/" + skin);
-    var i = new Skin("skin1");
-    i.copySkin(this.resources.cat.spineData.findSkin("skins/" + skin) as Skin);
-    i.addSkin(this.resources.cat.spineData.findSkin("bow-arrow/type1") as Skin);
+    this.stats.skin = (this.resources.cat.spineData.findSkin('skins/' + skin) && skin) || 'meow';
+    this.rendererPet.skeleton.setSkinByName('skins/' + skin);
+    var i = new Skin('skin1');
+    i.copySkin(this.resources.cat.spineData.findSkin('skins/' + skin) as Skin);
+    i.addSkin(this.resources.cat.spineData.findSkin('bow-arrow/type1') as Skin);
     this.rendererPet.skeleton.setSkin(i);
     this.rendererPet.skeleton.setToSetupPose();
   }

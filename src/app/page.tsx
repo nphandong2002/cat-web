@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import CatPage from "./cat/cat-page";
+import CatPage from '../sections/pages/cat/cat-page';
 
 export default function Home() {
   return <CatPage />;
