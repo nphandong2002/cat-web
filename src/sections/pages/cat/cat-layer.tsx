@@ -1,16 +1,16 @@
-'use client';
+"use client";
 
-import { ISpineResource } from '@pixi-spine/loader-base';
+import { ISpineResource } from "@pixi-spine/loader-base";
 
-import { useEffect, useRef, useState } from 'react';
-import { Assets, LoaderParser } from 'pixi.js';
+import { useEffect, useRef, useState } from "react";
+import { Assets, LoaderParser } from "pixi.js";
 
-import { ApplicationCustom } from './_utils/ApplicationCustom';
-import { resourcesType } from './cat-type';
-import { PetLayer } from './_layer/pet_layer';
+import { ApplicationCustom } from "./_utils/ApplicationCustom";
+import { resourcesType } from "./cat-type";
+import { PetLayer } from "./_layer/pet_layer";
 
-import { spineLoaderExtension } from './_utils/spineLoaderExtension';
-import { spineTextureAtlasLoader } from './_utils/spineTextureAtlasLoader';
+import { spineLoaderExtension } from "./_utils/spineLoaderExtension";
+import { spineTextureAtlasLoader } from "./_utils/spineTextureAtlasLoader";
 
 type renderManagerType = Partial<{
   app: ApplicationCustom;
@@ -30,13 +30,13 @@ function CatLayer({ skinName }: { skinName: string }) {
     renderManager.petLayer?.changeSkin(skinName);
   }, [renderManager, skinName]);
   useEffect(() => {
-    const handle
+    // const handle
   }, [renderManager.petLayer]);
   useEffect(() => {
     Assets.loader.parsers.push(spineTextureAtlasLoader.loader as LoaderParser);
     Assets.loader.parsers.push(spineLoaderExtension.loader as LoaderParser);
-    Assets.add('cat', '/spine/cat.json');
-    Assets.load(['cat']).then((a: any) => {
+    Assets.add("cat", "/spine/cat.json");
+    Assets.load(["cat"]).then((a: any) => {
       if (canvasref.current) {
         const bound = canvasref.current.getBoundingClientRect();
         let appinit = new ApplicationCustom({
@@ -50,7 +50,7 @@ function CatLayer({ skinName }: { skinName: string }) {
           width: appinit.view.width,
         });
         appinit.pets.addChild(layer.getLayer());
-        canvasref.current.innerHTML = '';
+        canvasref.current.innerHTML = "";
         canvasref.current.appendChild(appinit.view as unknown as Node);
         setrenderManager((a) => ({
           ...a,
