@@ -1,5 +1,8 @@
-import { ISpineResource } from '@pixi-spine/loader-base';
-import { ISkeletonData } from '@pixi-spine/base';
+import { ISpineResource } from "@pixi-spine/loader-base";
+import { ISkeletonData } from "@pixi-spine/base";
+import { ApplicationCustom } from "./_utils/ApplicationCustom";
+import { PetLayer } from "./_layer/pet_layer";
+import { Container } from "pixi.js";
 
 export type resourcesType = {
   cat: ISpineResource<ISkeletonData>;
@@ -22,12 +25,12 @@ export type statsType = {
   posTop: number;
   animation: string;
 
-  direction: 'right' | 'left';
+  direction: "right" | "left";
   walk: boolean;
   talk: boolean;
   name: string;
   clowderName: String;
-  idleType: 'idle';
+  idleType: "idle";
   level: number;
   skin: string;
   eyes: string;
@@ -39,5 +42,18 @@ export type statsType = {
   faceMask: string;
   companion: string;
   rod: string;
-  walkType: 'BOTTOM' | null;
+  walkType: "BOTTOM" | null;
 };
+export type renderManagerType = Partial<{
+  app: ApplicationCustom;
+  resources: resourcesType;
+  layer: {
+    bg: Container;
+    petCurrent: Container;
+    pets: listContainerType;
+  };
+  petLayer: PetLayer;
+  speed: number;
+}>;
+
+export type listContainerType = Container[];

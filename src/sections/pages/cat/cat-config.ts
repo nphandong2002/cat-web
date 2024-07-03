@@ -240,3 +240,8 @@ export const action = ["dead", "sleep", "lick", "dig", "mad", "sit", "sit-sad", 
 export const zindex = {
   pet: 4,
 };
+export const defaultData = {
+  speed: 3,
+  animation: idleType[0],
+  skin: "meow",
+};
