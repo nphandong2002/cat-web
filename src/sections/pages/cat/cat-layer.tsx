@@ -33,7 +33,7 @@ function CatLayer({ skinName }: { skinName: string }) {
   const keydownHandle = useCallback(
     (e: KeyboardEvent) => {
       if (e.key in typeKey && renderManager.layer) {
-        typeKey[e.key as keyof typeof typeKey]([renderManager.layer.petCurrent]);
+        typeKey[e.key as keyof typeof typeKey]([renderManager.layer.petCurrent, renderManager.layer.bg]);
       }
     },
     [renderManager]
@@ -83,7 +83,7 @@ function CatLayer({ skinName }: { skinName: string }) {
           app: appinit,
           petLayer: petlayer,
           layer: {
-            bg: petlayer.getLayer(),
+            bg: bgLayer.getLayer(),
             petCurrent: petlayer.getLayer(),
             pets: [petlayer.getLayer()],
           },
