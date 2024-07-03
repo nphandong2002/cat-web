@@ -1,5 +1,5 @@
-import { ISpineResource } from "@pixi-spine/loader-base";
-import { ISkeletonData } from "@pixi-spine/base";
+import { ISpineResource } from '@pixi-spine/loader-base';
+import { ISkeletonData } from '@pixi-spine/base';
 
 export type resourcesType = {
   cat: ISpineResource<ISkeletonData>;
@@ -12,18 +12,22 @@ export type positionType = {
   x: number;
   y: number;
 };
-export type optionLayerType = viewportType & {};
+export type optionLayerType = viewportType &
+  Partial<positionType> & {
+    zIndex?: number;
+    scale?: number;
+  };
 export type statsType = {
   posLeft: number;
   posTop: number;
   animation: string;
 
-  direction: "right" | "left";
+  direction: 'right' | 'left';
   walk: boolean;
   talk: boolean;
   name: string;
   clowderName: String;
-  idleType: "idle";
+  idleType: 'idle';
   level: number;
   skin: string;
   eyes: string;
@@ -35,5 +39,5 @@ export type statsType = {
   faceMask: string;
   companion: string;
   rod: string;
-  walkType: "BOTTOM" | null;
+  walkType: 'BOTTOM' | null;
 };
