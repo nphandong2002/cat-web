@@ -1,18 +1,11 @@
-import { Container, Sprite } from 'pixi.js';
-import { optionLayerType } from '../cat-type';
+import { Container, Sprite } from "pixi.js";
+import { optionLayerType } from "../cat-type";
+import { BaseLayer } from "./base_layer";
 
-export class BackgroundLayer {
-  private container: Container;
-  constructor(op?: optionLayerType) {
-    this.container = new Container();
-    const bg = Sprite.from('bg/background.png');
-    this.container.zIndex = op?.zIndex || 0;
-    this.container.x = op?.x || 0;
-    this.container.y = op?.y || 0;
-
+export class BackgroundLayer extends BaseLayer {
+  constructor(op: optionLayerType) {
+    super(op);
+    const bg = Sprite.from("bg/background.png");
     this.container.addChild(bg);
-  }
-  getLayer() {
-    return this.container;
   }
 }

@@ -3,6 +3,7 @@ import { ISkeletonData } from "@pixi-spine/base";
 import { ApplicationCustom } from "./_utils/ApplicationCustom";
 import { PetLayer } from "./_layer/pet_layer";
 import { Container } from "pixi.js";
+import { BackgroundLayer } from "./_layer/bg_layer";
 
 export type resourcesType = {
   cat: ISpineResource<ISkeletonData>;
@@ -16,42 +17,22 @@ export type positionType = {
   y: number;
 };
 export type optionLayerType = viewportType &
-  Partial<positionType> & {
-    zIndex?: number;
+  positionType & {
     scale?: number;
+    zIndex: number;
+    zOrder?: number;
+    rotation?: number;
   };
-export type statsType = {
-  posLeft: number;
-  posTop: number;
-  animation: string;
-
-  direction: "right" | "left";
-  walk: boolean;
-  talk: boolean;
-  name: string;
-  clowderName: String;
-  idleType: "idle";
-  level: number;
+export type optionPetLayerType = optionLayerType & {
   skin: string;
-  eyes: string;
-  hat: string;
-  glasses: string;
-  mask: string;
-  wings: string;
-  costume: string;
-  faceMask: string;
-  companion: string;
-  rod: string;
-  walkType: "BOTTOM" | null;
+};
+export type statsType = {
+  skin: string;
 };
 export type renderManagerType = Partial<{
   app: ApplicationCustom;
   resources: resourcesType;
-  layer: {
-    bg: Container;
-    petCurrent: Container;
-    pets: listContainerType;
-  };
+  bgLayer: BackgroundLayer;
   petLayer: PetLayer;
   speed: number;
 }>;

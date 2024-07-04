@@ -1,68 +1,36 @@
-import { Container } from 'pixi.js';
-import { Skin, Spine, SkeletonData } from '@pixi-spine/runtime-4.1';
+import { Container } from "pixi.js";
+import { Skin, Spine, SkeletonData } from "@pixi-spine/runtime-4.1";
 
-import { idleType, action, feeling, zindex } from '../cat-config';
-import { optionLayerType, resourcesType, statsType, viewportType } from '../cat-type';
+import { idleType, action, feeling, zindex } from "../cat-config";
+import { optionLayerType, optionPetLayerType, resourcesType, statsType, viewportType } from "../cat-type";
+import { BaseLayer } from "./base_layer";
 
 var n = idleType,
   i = feeling,
   a = action,
   versionPet = [
-    { v: 'v1', skin: [] },
-    { v: 'v2', skin: ['husky', 'choco', 'cheetah'] },
-    { v: 'v3', skin: ['koala'] },
-    { v: 'v4', skin: ['howie'] },
+    { v: "v1", skin: [] },
+    { v: "v2", skin: ["husky", "choco", "cheetah"] },
+    { v: "v3", skin: ["koala"] },
+    { v: "v4", skin: ["howie"] },
   ];
-export class PetLayer {
-  private resources: resourcesType;
-  private stats: statsType;
-  private rendererPet: Spine;
-  private rendererContainer: Container;
-  private viewport: viewportType;
-  constructor(resources: resourcesType, option: optionLayerType) {
+export class PetLayer extends BaseLayer {
+  resources: resourcesType;
+  rendererPet: Spine;
+  stats: statsType;
+  constructor(resources: resourcesType, option: optionPetLayerType) {
+    super(option);
     this.resources = resources;
-    this.viewport = {
-      width: option?.width || 150,
-      height: option?.height || 125,
-    };
     this.stats = {
-      level: 0,
-      posLeft: this.viewport.width / 2,
-      direction: 'right',
-      posTop: this.viewport.height,
-      animation: idleType[0],
-      walk: !0,
-      talk: !0,
-      name: '',
-      clowderName: '',
-      idleType: 'idle',
-      skin: 'meow',
-      eyes: '',
-      hat: '',
-      glasses: '',
-      mask: '',
-      wings: '',
-      costume: '',
-      faceMask: '',
-      companion: '',
-      rod: 'rod1',
-      walkType: 'BOTTOM',
+      skin: option.skin,
     };
     this.rendererPet = new Spine(resources.cat.spineData as SkeletonData);
-    this.rendererContainer = new Container();
-    this.initData();
-    this.changeSkin(this.stats.skin);
-    this.changeAnimation(0, this.stats.animation, true);
-  }
-  initData() {
     this.rendererPet.filters = [];
-    this.rendererContainer.addChild(this.rendererPet);
-    this.rendererContainer.zOrder = zindex.pet;
-    this.rendererContainer.position.x = this.stats.posLeft;
-    this.rendererContainer.position.y = this.stats.posTop;
-    this.rendererContainer.scale.x = 0.5;
-    this.rendererContainer.scale.y = 0.5;
+    this.container.addChild(this.rendererPet);
     this.setMixAction();
+    this.changeSkin(this.stats.skin);
+    this.container.position.x = option.x + this.container.width;
+    this.container.position.y = option.y + this.container.height;
   }
   private setMixAction() {
     for (var o in n) {
@@ -86,21 +54,13 @@ export class PetLayer {
     this.clearAnimation();
     this.rendererPet.state.setAnimation(trackIndex, animation, loop);
   }
-  changeView(viewport: viewportType) {
-    this.viewport = viewport;
-    this.stats.posLeft = this.viewport.width / 2;
-    this.stats.posTop = this.viewport.height;
-  }
   changeSkin(skin: string) {
-    this.stats.skin = (this.resources.cat.spineData.findSkin('skins/' + skin) && skin) || 'meow';
-    this.rendererPet.skeleton.setSkinByName('skins/' + skin);
-    var i = new Skin('skin1');
-    i.copySkin(this.resources.cat.spineData.findSkin('skins/' + skin) as Skin);
-    i.addSkin(this.resources.cat.spineData.findSkin('bow-arrow/type1') as Skin);
+    this.stats.skin = (this.resources.cat.spineData.findSkin("skins/" + skin) && skin) || "meow";
+    this.rendererPet.skeleton.setSkinByName("skins/" + skin);
+    var i = new Skin("skin1");
+    i.copySkin(this.resources.cat.spineData.findSkin("skins/" + skin) as Skin);
+    i.addSkin(this.resources.cat.spineData.findSkin("bow-arrow/type1") as Skin);
     this.rendererPet.skeleton.setSkin(i);
     this.rendererPet.skeleton.setToSetupPose();
-  }
-  getLayer() {
-    return this.rendererContainer;
   }
 }

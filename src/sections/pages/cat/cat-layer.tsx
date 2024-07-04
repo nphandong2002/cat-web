@@ -10,10 +10,10 @@ import { PetLayer } from "./_layer/pet_layer";
 import { spineLoaderExtension } from "./_utils/spineLoaderExtension";
 import { spineTextureAtlasLoader } from "./_utils/spineTextureAtlasLoader";
 import { BackgroundLayer } from "./_layer/bg_layer";
-import { defaultData } from "./cat-config";
+import { defaultData, zindex } from "./cat-config";
 import { keyDown } from "./_handle/keydown";
 
-function CatLayer({ skinName }: { skinName: string }) {
+function CatLayer({ skinName, scale }: { skinName: string; scale?: number }) {
   const [renderManager, setrenderManager] = useState<renderManagerType>({
     speed: defaultData.speed,
   });
@@ -32,8 +32,8 @@ function CatLayer({ skinName }: { skinName: string }) {
 
   const keydownHandle = useCallback(
     (e: KeyboardEvent) => {
-      if (e.key in typeKey && renderManager.layer) {
-        typeKey[e.key as keyof typeof typeKey]([renderManager.layer.petCurrent, renderManager.layer.bg]);
+      if (e.key in typeKey && renderManager.petLayer && renderManager.bgLayer) {
+        typeKey[e.key as keyof typeof typeKey]([renderManager.petLayer.container, renderManager.bgLayer.container]);
       }
     },
     [renderManager]
@@ -69,28 +69,31 @@ function CatLayer({ skinName }: { skinName: string }) {
         let petlayer = new PetLayer(a, {
           height: appinit.screen.height,
           width: appinit.screen.width,
+          x: 0,
+          y: 0,
+          skin: defaultData.skin,
+          zIndex: zindex.pet,
         });
         let bgLayer = new BackgroundLayer({
           height: appinit.screen.height,
           width: appinit.screen.width,
+          x: -735,
+          y: -650,
+          zIndex: zindex.bg,
         });
-        appinit.pets.addChild(bgLayer.getLayer());
-        appinit.pets.addChild(petlayer.getLayer());
+        appinit.pets.addChild(bgLayer.container);
+        appinit.pets.addChild(petlayer.container);
         canvasref.current.innerHTML = "";
         canvasref.current.appendChild(appinit.view as unknown as Node);
         setrenderManager((a) => ({
           ...a,
           app: appinit,
           petLayer: petlayer,
-          layer: {
-            bg: bgLayer.getLayer(),
-            petCurrent: petlayer.getLayer(),
-            pets: [petlayer.getLayer()],
-          },
+          bgLayer: bgLayer,
         }));
       }
     });
-  }, [canvasref]);
+  }, [canvasref, scale]);
   return <div className="w-full h-full" ref={canvasref}></div>;
 }
 
