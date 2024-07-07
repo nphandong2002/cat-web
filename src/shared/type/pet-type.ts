@@ -5,6 +5,7 @@ import { ISpineResource } from "@pixi-spine/loader-base";
 import { ApplicationCustom } from "src/sections/component/pet/_utils/ApplicationCustom";
 import { BackgroundLayer } from "src/sections/component/pet/_layer/bg_layer";
 import { PetLayer } from "src/sections/component/pet/_layer/pet_layer";
+import { Keys } from "../constants/constants";
 
 export type resourcesType = {
   cat: ISpineResource<ISkeletonData>;
@@ -17,19 +18,19 @@ export type positionType = {
   x: number;
   y: number;
 };
-export type optionLayerType = viewportType &
-  positionType & {
+export type optionLayerType = Partial<viewportType> &
+  Partial<positionType> & {
     zIndex: number;
     zOrder?: number;
     rotation?: number;
   };
 
-  export type optionConfigPet = {
-     skin: string;
+export type optionConfigPet = {
+  skin: string;
   speed: number;
   animation: string;
-    scale: number;
-  }
+  scale: number;
+};
 export type optionPetLayerType = optionLayerType & optionConfigPet;
 
 export type statsType = {
@@ -38,11 +39,12 @@ export type statsType = {
 export type renderManagerType = Partial<{
   app: ApplicationCustom;
   resources: resourcesType;
-  layer : {
-      bgLayer: BackgroundLayer;
+  layer: {
+    bgLayer: BackgroundLayer;
     petLayer: PetLayer;
-  }
-
+  };
 }>;
 
 export type listContainerType = Container[];
+
+export type KeysType = Keys;

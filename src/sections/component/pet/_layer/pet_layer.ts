@@ -29,8 +29,10 @@ export class PetLayer extends BaseLayer {
     this.container.addChild(this.rendererPet);
     this.setMixAction();
     this.changeSkin(this.stats.skin);
-    this.container.position.x = option.x + this.container.width;
-    this.container.position.y = option.y + this.container.height;
+    this.container.position.x = this.viewport.width / 2;
+    this.container.position.y = this.viewport.height / 2;
+    this.container.scale.x = option.scale || 1;
+    this.container.scale.y = option.scale || 1;
   }
   private setMixAction() {
     for (var o in n) {
@@ -48,6 +50,10 @@ export class PetLayer extends BaseLayer {
       for (var x in i) this.rendererPet.stateData.setMix(a[m], i[x], 0.3);
       for (var w in a) this.rendererPet.stateData.setMix(a[m], a[w], 0.4);
     }
+  }
+  setPosition(x: number, y: number): void {
+    this.container.position.x = this.viewport.width / 2;
+    this.container.position.y = this.viewport.height / 2;
   }
   clearAnimation() {}
   changeAnimation(trackIndex: number, animation: string, loop: boolean) {
