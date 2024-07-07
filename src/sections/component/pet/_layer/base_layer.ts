@@ -1,5 +1,5 @@
 import { Container } from "pixi.js";
-import { optionLayerType, viewportType } from "../cat-type";
+import { optionLayerType, viewportType } from "../../../pages/info/cat-type";
 export class BaseLayer {
   container: Container;
   viewport: viewportType;

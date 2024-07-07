@@ -4,8 +4,8 @@ import Image from 'next/image';
 
 import { useState } from 'react';
 
-import { listPetPro } from './cat-config';
-import CatLayer from './cat-layer';
+import { listPetPro } from '../../component/pet/cat-config';
+import CatLayer from '../../component/pet/pet-layer';
 
 export default function CatPage() {
   const [skinName, setskinName] = useState(listPetPro[0].tag);

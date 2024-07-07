@@ -237,12 +237,3 @@ export const idleType = [
 ];
 export const feeling = ["sad", "thanks", "please", "slide"];
 export const action = ["dead", "sleep", "lick", "dig", "mad", "sit", "sit-sad", "fish-hook", "fish-catch", "fish", "fish-catch"];
-export const zindex = {
-  pet: 4,
-  bg: 0,
-};
-export const defaultData = {
-  speed: 3,
-  animation: idleType[0],
-  skin: "meow",
-};

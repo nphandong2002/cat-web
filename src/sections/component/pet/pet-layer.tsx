@@ -4,25 +4,22 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Assets, LoaderParser } from "pixi.js";
 
 import { ApplicationCustom } from "./_utils/ApplicationCustom";
-import { renderManagerType } from "./cat-type";
 import { PetLayer } from "./_layer/pet_layer";
 
 import { spineLoaderExtension } from "./_utils/spineLoaderExtension";
 import { spineTextureAtlasLoader } from "./_utils/spineTextureAtlasLoader";
 import { BackgroundLayer } from "./_layer/bg_layer";
-import { defaultData, zindex } from "./cat-config";
 import { keyDown } from "./_handle/keydown";
+import { optionConfigPet, optionPetLayerType, renderManagerType } from "src/shared/type/pet-type";
+import { defaultPet, zindex } from "src/config/pet-config";
 
-function CatLayer({ skinName, scale }: { skinName: string; scale?: number }) {
+function CatLayer({ optionPet }: { optionPet: Partial<optionConfigPet> }) {
   const [renderManager, setrenderManager] = useState<renderManagerType>({
-    speed: defaultData.speed,
   });
   const handleKeyDown = useCallback(keyDown, [renderManager])(renderManager);
   const canvasref = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    renderManager.petLayer?.changeSkin(skinName);
-  }, [renderManager, skinName]);
+
   const typeKey = {
     w: handleKeyDown.keyW,
     a: handleKeyDown.keyA,
@@ -32,9 +29,7 @@ function CatLayer({ skinName, scale }: { skinName: string; scale?: number }) {
 
   const keydownHandle = useCallback(
     (e: KeyboardEvent) => {
-      if (e.key in typeKey && renderManager.petLayer && renderManager.bgLayer) {
-        typeKey[e.key as keyof typeof typeKey]([renderManager.petLayer.container, renderManager.bgLayer.container]);
-      }
+     
     },
     [renderManager]
   );
@@ -71,14 +66,14 @@ function CatLayer({ skinName, scale }: { skinName: string; scale?: number }) {
           width: appinit.screen.width,
           x: 0,
           y: 0,
-          skin: defaultData.skin,
-          zIndex: zindex.pet,
+          ...defaultPet,
+          ...optionPet,
         });
         let bgLayer = new BackgroundLayer({
           height: appinit.screen.height,
           width: appinit.screen.width,
-          x: -735,
-          y: -650,
+          x: 1,
+          y: 1,
           zIndex: zindex.bg,
         });
         appinit.pets.addChild(bgLayer.container);
@@ -93,7 +88,7 @@ function CatLayer({ skinName, scale }: { skinName: string; scale?: number }) {
         }));
       }
     });
-  }, [canvasref, scale]);
+  }, [canvasref,optionPet]);
   return <div className="w-full h-full" ref={canvasref}></div>;
 }
 

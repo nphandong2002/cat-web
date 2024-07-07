@@ -1,5 +1,5 @@
 import { Container, Sprite } from "pixi.js";
-import { optionLayerType } from "../cat-type";
+import { optionLayerType } from "../../../pages/info/cat-type";
 import { BaseLayer } from "./base_layer";
 
 export class BackgroundLayer extends BaseLayer {

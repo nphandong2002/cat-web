@@ -1,8 +1,8 @@
-import { Container } from "pixi.js";
 import { Skin, Spine, SkeletonData } from "@pixi-spine/runtime-4.1";
 
-import { idleType, action, feeling, zindex } from "../cat-config";
-import { optionLayerType, optionPetLayerType, resourcesType, statsType, viewportType } from "../cat-type";
+import { action, feeling, idleType } from "src/shared/constants/pet-constants";
+import { optionPetLayerType, resourcesType, statsType } from "src/shared/type/pet-type";
+
 import { BaseLayer } from "./base_layer";
 
 var n = idleType,

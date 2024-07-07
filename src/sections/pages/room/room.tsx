@@ -1,12 +1,13 @@
 import { useState } from "react";
-import CatLayer from "../cat/cat-layer";
+import CatLayer from "../../component/pet/pet-layer";
 
 function RoomPage() {
-  const [skinName, setskinName] = useState("meow");
 
   return (
     <div className="h-screen">
-      <CatLayer skinName={skinName}></CatLayer>
+      <CatLayer optionPet={
+        {scale: 0.3}
+      }></CatLayer>
     </div>
   );
 }
