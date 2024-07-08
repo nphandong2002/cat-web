@@ -1,9 +1,11 @@
-import { Container } from "pixi.js";
-import { KeysType, optionLayerType, viewportType } from "src/shared/type/pet-type";
+import { Container } from 'pixi.js';
+import { moveConfig } from 'src/config/pet-config';
+import { KeysType, optionLayerType, viewportType } from 'src/shared/type/pet-type';
 export class BaseLayer {
   container: Container;
   viewport: viewportType;
   key: KeysType[];
+  speed: number;
   constructor(op: optionLayerType) {
     this.container = new Container();
     this.viewport = {
@@ -15,6 +17,7 @@ export class BaseLayer {
     this.container.position.x = op.x || 0;
     this.container.position.y = op.y || 0;
     this.key = [];
+    this.speed = op.speed;
   }
   setScale(s: number) {
     this.container.scale.x = s;
@@ -31,7 +34,15 @@ export class BaseLayer {
     if (this.key.some((a) => a == key))
       this.key.splice(
         this.key.findIndex((a) => a == key),
-        1
+        1,
       );
+  }
+  move() {
+    let key = this.key[0];
+    if (key) {
+      let { x, y } = moveConfig[key];
+      x != 0 && (this.container.position.x += x * this.speed);
+      y != 0 && (this.container.position.y += y * this.speed);
+    }
   }
 }

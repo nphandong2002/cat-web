@@ -1,58 +1,57 @@
-"use client";
+'use client';
 
-import { useCallback, useEffect, useRef, useState } from "react";
-import { Assets, LoaderParser } from "pixi.js";
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { Assets, LoaderParser } from 'pixi.js';
 
-import { ApplicationCustom } from "./_utils/ApplicationCustom";
-import { PetLayer } from "./_layer/pet_layer";
+import { ApplicationCustom } from './_utils/ApplicationCustom';
+import { PetLayer } from './_layer/pet_layer';
 
-import { spineLoaderExtension } from "./_utils/spineLoaderExtension";
-import { spineTextureAtlasLoader } from "./_utils/spineTextureAtlasLoader";
-import { BackgroundLayer } from "./_layer/bg_layer";
-import { keyDown } from "./_handle/keydown";
-import { KeysType, optionConfigPet, optionPetLayerType, renderManagerType } from "src/shared/type/pet-type";
-import { defaultPet, zindex } from "src/config/pet-config";
-import { Keys } from "src/shared/constants/constants";
+import { spineLoaderExtension } from './_utils/spineLoaderExtension';
+import { spineTextureAtlasLoader } from './_utils/spineTextureAtlasLoader';
+import { BackgroundLayer } from './_layer/bg_layer';
+import { KeysType, optionConfigPet, optionPetLayerType, renderManagerType } from 'src/shared/type/pet-type';
+import { defaultPet, moveConfig, zindex } from 'src/config/pet-config';
+import { Keys } from 'src/shared/constants/constants';
 
 function CatLayer({ optionPet }: { optionPet: Partial<optionConfigPet> }) {
-  const [renderManager, setrenderManager] = useState<renderManagerType>({});
-  const handleKeyDown = useCallback(keyDown, [renderManager])(renderManager);
   const canvasref = useRef<HTMLDivElement>(null);
-
-  const typeKey = {
-    [Keys.UP]: handleKeyDown.keyW,
-    [Keys.LEFT]: handleKeyDown.keyA,
-    [Keys.DOWN]: handleKeyDown.keyS,
-    [Keys.RIGHT]: handleKeyDown.keyD,
-  };
+  const [renderManager, setrenderManager] = useState<renderManagerType>({});
 
   const keydownHandle = useCallback(
     (e: KeyboardEvent) => {
-      if (e.key in typeKey) renderManager.layer?.petLayer.addKey(e.key as KeysType);
+      Object.values(Keys).includes(e.key as Keys) &&
+        renderManager.layer &&
+        Object.values(renderManager.layer).forEach((a) => {
+          a.addKey(e.key as KeysType);
+        });
     },
-    [renderManager]
+    [renderManager],
   );
 
   const keyupHandle = useCallback(
     (e: KeyboardEvent) => {
-      if (e.key in typeKey) renderManager.layer?.petLayer.removeKey(e.key as KeysType);
+      Object.values(Keys).includes(e.key as Keys) &&
+        renderManager.layer &&
+        Object.values(renderManager.layer).forEach((a) => {
+          a.removeKey(e.key as KeysType);
+        });
     },
-    [renderManager]
+    [renderManager],
   );
 
   useEffect(() => {
-    window.addEventListener("keydown", keydownHandle);
-    window.addEventListener("keyup", keyupHandle);
+    window.addEventListener('keydown', keydownHandle);
+    window.addEventListener('keyup', keyupHandle);
     return () => {
-      window.removeEventListener("keydown", keydownHandle);
-      window.removeEventListener("keyup", keyupHandle);
+      window.removeEventListener('keydown', keydownHandle);
+      window.removeEventListener('keyup', keyupHandle);
     };
   }, [keydownHandle, keyupHandle]);
   useEffect(() => {
     Assets.loader.parsers.push(spineTextureAtlasLoader.loader as LoaderParser);
     Assets.loader.parsers.push(spineLoaderExtension.loader as LoaderParser);
-    Assets.add("cat", "/spine/cat.json");
-    Assets.load(["cat"]).then((a: any) => {
+    Assets.add('cat', '/spine/cat.json');
+    Assets.load(['cat']).then((a: any) => {
       if (canvasref.current) {
         const bound = canvasref.current.getBoundingClientRect();
         let appinit = new ApplicationCustom({
@@ -74,14 +73,20 @@ function CatLayer({ optionPet }: { optionPet: Partial<optionConfigPet> }) {
           x: -1000,
           y: -650,
           zIndex: zindex.bg,
+          scale: 2,
+          speed: 3,
         });
         appinit.pets.addChild(bgLayer.container);
         appinit.pets.addChild(petlayer.container);
         appinit.ticker.add(() => {
           let k = petlayer.key[0];
-          k && petlayer.changeAnimation(1, "walk", true);
+          k == Keys.RIGHT && (petlayer.stats.direction = 'right');
+          k == Keys.LEFT && (petlayer.stats.direction = 'left');
+          petlayer.setDirection();
+          petlayer.changeAnimation(0, k ? 'walk' : 'idle', true);
+          bgLayer.move();
         });
-        canvasref.current.innerHTML = "";
+        canvasref.current.innerHTML = '';
         canvasref.current.appendChild(appinit.view as unknown as Node);
         setrenderManager((a) => ({
           ...a,
