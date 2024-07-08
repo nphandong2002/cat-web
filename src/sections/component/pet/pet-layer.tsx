@@ -38,13 +38,16 @@ function CatLayer({ optionPet }: { optionPet: Partial<optionConfigPet> }) {
     },
     [renderManager],
   );
+  const clickHandle = useCallback((e: MouseEvent) => {}, [renderManager]);
 
   useEffect(() => {
     window.addEventListener('keydown', keydownHandle);
     window.addEventListener('keyup', keyupHandle);
+    window.addEventListener('click', clickHandle);
     return () => {
       window.removeEventListener('keydown', keydownHandle);
       window.removeEventListener('keyup', keyupHandle);
+      window.addEventListener('click', clickHandle);
     };
   }, [keydownHandle, keyupHandle]);
   useEffect(() => {
@@ -74,7 +77,7 @@ function CatLayer({ optionPet }: { optionPet: Partial<optionConfigPet> }) {
           y: -650,
           zIndex: zindex.bg,
           scale: 2,
-          speed: 3,
+          speed: 13,
         });
         appinit.pets.addChild(bgLayer.container);
         appinit.pets.addChild(petlayer.container);

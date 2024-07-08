@@ -34,6 +34,12 @@ export type optionConfigPet = {
 export type optionConfigBg = {
   scale: number;
 };
+export type optionConfigProjectile = {
+  dame: number;
+  image?: string;
+};
+export type optionProjectileLayerType = optionLayerType & optionConfigProjectile;
+
 export type optionBgLayerType = optionLayerType & optionConfigBg;
 export type optionPetLayerType = optionLayerType & optionConfigPet;
 
