@@ -2,10 +2,12 @@ import { Container } from 'pixi.js';
 
 import { ISkeletonData } from '@pixi-spine/base';
 import { ISpineResource } from '@pixi-spine/loader-base';
-import { ApplicationCustom } from 'src/sections/component/pet/_utils/ApplicationCustom';
-import { BackgroundLayer } from 'src/sections/component/pet/_layer/bg_layer';
+
 import { PetLayer } from 'src/sections/component/pet/_layer/pet_layer';
-import { Keys } from '../constants/constants';
+import { BackgroundLayer } from 'src/sections/component/pet/_layer/bg_layer';
+import { ApplicationCustom } from 'src/sections/component/pet/_utils/ApplicationCustom';
+
+import { Keys } from '../constain';
 
 export type resourcesType = {
   cat: ISpineResource<ISkeletonData>;

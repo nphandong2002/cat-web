@@ -1,8 +1,14 @@
-"use client";
+import { SessionProvider } from 'next-auth/react';
 
-import RoomPage from "src/sections/pages/room/room";
-import CatPage from "../sections/pages/info/info-page";
+import { auth } from 'src/auth';
+import RoomPage from 'src/sections/pages/room/room';
 
-export default function Home() {
-  return <RoomPage />;
+export default async function Home() {
+  const session = await auth();
+
+  return (
+    <SessionProvider session={session}>
+      <RoomPage />
+    </SessionProvider>
+  );
 }

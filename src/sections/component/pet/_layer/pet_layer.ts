@@ -1,6 +1,6 @@
 import { Skin, Spine, SkeletonData } from '@pixi-spine/runtime-4.1';
 
-import { action, feeling, idleType } from 'src/shared/constants/pet-constants';
+import { action, feeling, idleType } from 'src/shared/constain/pet-constain';
 import { optionPetLayerType, resourcesType, statsType } from 'src/shared/type/pet-type';
 
 import { BaseLayer } from './base_layer';

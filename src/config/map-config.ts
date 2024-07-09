@@ -1,4 +1,4 @@
-import { battleZonesData, charactersMapData, collisions } from "src/shared/constants/map-constants";
+import { battleZonesData, charactersMapData, collisions } from 'src/shared/constain/map-constain';
 
 export const collisionsMap = (() => {
   let a = [];

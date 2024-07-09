@@ -11,7 +11,7 @@ import { spineTextureAtlasLoader } from './_utils/spineTextureAtlasLoader';
 import { BackgroundLayer } from './_layer/bg_layer';
 import { KeysType, optionConfigPet, optionPetLayerType, renderManagerType } from 'src/shared/type/pet-type';
 import { defaultPet, moveConfig, zindex } from 'src/config/pet-config';
-import { Keys } from 'src/shared/constants/constants';
+import { Keys } from 'src/shared/constain';
 
 function CatLayer({ optionPet }: { optionPet: Partial<optionConfigPet> }) {
   const canvasref = useRef<HTMLDivElement>(null);

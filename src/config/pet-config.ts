@@ -1,5 +1,5 @@
-import { Keys } from 'src/shared/constants/constants';
-import { idleType } from 'src/shared/constants/pet-constants';
+import { Keys } from 'src/shared/constain';
+import { idleType } from 'src/shared/constain/pet-constain';
 
 export const zindex = {
   pet: 4,
