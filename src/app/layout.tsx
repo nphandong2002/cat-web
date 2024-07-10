@@ -1,5 +1,8 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import PetProvider from 'src/shared/context/pet/pet-provider';
+import { RoomProvider } from 'src/liveblocks.config';
+import { LiveList, LiveMap, LiveObject } from '@liveblocks/client';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -13,7 +16,22 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <RoomProvider
+        id="112345456841"
+        initialPresence={{
+          pet: {
+            position: {},
+          },
+        }}
+        initialStorage={{
+          layerIds: new LiveList([]),
+          layers: new LiveMap<string, LiveObject<any>>(),
+        }}
+      >
+        <PetProvider>
+          <body>{children}</body>
+        </PetProvider>
+      </RoomProvider>
     </html>
   );
 }

@@ -1,14 +1,14 @@
-import { ISkeletonData, ISkeletonParser, TextureAtlas, BinaryInput } from '@pixi-spine/base';
-import { type AssetExtension, LoaderParserPriority, checkExtension } from '@pixi/assets';
-import { ExtensionType, settings, utils } from '@pixi/core';
-import type { ISpineMetadata } from '@pixi-spine/loader-base';
-import { ISpineResource } from '@pixi-spine/loader-base';
 import * as spine38 from '@pixi-spine/runtime-3.8';
 import * as spine37 from '@pixi-spine/runtime-3.7';
 import * as spine41 from '@pixi-spine/runtime-4.1';
+import { ISpineResource } from '@pixi-spine/loader-base';
+import { ExtensionType, settings, utils } from '@pixi/core';
+import type { ISpineMetadata } from '@pixi-spine/loader-base';
+import { type AssetExtension, LoaderParserPriority, checkExtension } from '@pixi/assets';
+import { ISkeletonData, ISkeletonParser, TextureAtlas, BinaryInput } from '@pixi-spine/base';
+
 import { SPINE_VERSION, detectSpineVersion } from './versions';
 import { makeSpineTextureAtlasLoaderFunctionFromPixiLoaderObject } from './makeSpineTextureAtlasLoader';
-import { ResolvedAsset } from 'pixi.js';
 
 type SPINEJSON = any;
 type SPINEBINARY = ArrayBuffer;
@@ -143,11 +143,11 @@ export const spineLoaderExtension: AssetExtension<
           (newAtlas) => {
             if (!newAtlas) {
               auxReject(
-                'Something went terribly wrong loading a spine .atlas file\nMost likely your texture failed to load.'
+                'Something went terribly wrong loading a spine .atlas file\nMost likely your texture failed to load.',
               );
             }
             auxResolve(atlas);
-          }
+          },
         );
         const textureAtlas = await atlasPromise;
         return parseData(parser, textureAtlas, dataToParse);

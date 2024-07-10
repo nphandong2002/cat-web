@@ -1,8 +1,9 @@
-import { TextureAtlas } from "@pixi-spine/base";
-import { type AssetExtension, LoaderParserPriority, Loader, checkExtension } from "@pixi/assets";
-import { ExtensionType, settings, utils } from "@pixi/core";
-import type { ISpineMetadata } from "@pixi-spine/loader-base";
-import { makeSpineTextureAtlasLoaderFunctionFromPixiLoaderObject } from "./makeSpineTextureAtlasLoader";
+import { TextureAtlas } from '@pixi-spine/base';
+import { ExtensionType, settings, utils } from '@pixi/core';
+import type { ISpineMetadata } from '@pixi-spine/loader-base';
+import { type AssetExtension, LoaderParserPriority, Loader, checkExtension } from '@pixi/assets';
+
+import { makeSpineTextureAtlasLoaderFunctionFromPixiLoaderObject } from './makeSpineTextureAtlasLoader';
 
 type RawAtlas = string;
 
@@ -53,13 +54,13 @@ export const spineTextureAtlasLoader: AssetExtension<RawAtlas | TextureAtlas, IS
             if (page && page.baseTexture) callback(page.baseTexture);
             else callback(page);
           },
-          resolveCallback
+          resolveCallback,
         );
       } else {
         retval = new TextureAtlas(
           asset as RawAtlas,
           makeSpineTextureAtlasLoaderFunctionFromPixiLoaderObject(loader, basePath, metadata.imageMetadata),
-          resolveCallback
+          resolveCallback,
         );
       }
       return (await retPromise) as TextureAtlas;

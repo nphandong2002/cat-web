@@ -1,5 +1,6 @@
 import { createClient, LiveList, LiveMap, LiveObject } from '@liveblocks/client';
 import { createRoomContext } from '@liveblocks/react';
+import { positionType, projectileJson } from './shared/type/pet-type';
 
 const client = createClient({
   throttle: 16,
@@ -7,10 +8,31 @@ const client = createClient({
 });
 
 type Presence = {
-  cursor: { x: number; y: number };
+  pet: {
+    position: { x: number; y: number };
+    loyalty: number;
+    animation: string;
+    projectile: projectileJson[];
+    skin: string;
+    name: string;
+    customSkin: {
+      eyes: string;
+      hat: string;
+      glasses: string;
+      mask: string;
+      wings: string;
+      costume: string;
+      faceMask: string;
+      companion: string;
+      rod: string;
+    } | null;
+  };
 };
 
-type Storage = {};
+type Storage = {
+  layers: LiveMap<string, LiveObject<Presence>>;
+  layerIds: LiveList<projectileJson>;
+};
 
 type UserMeta = {
   id?: string;

@@ -6,8 +6,8 @@ import { Assets, LoaderParser } from 'pixi.js';
 import { ApplicationCustom } from './_utils/ApplicationCustom';
 import { PetLayer } from './_layer/pet_layer';
 
-import { spineLoaderExtension } from './_utils/spineLoaderExtension';
-import { spineTextureAtlasLoader } from './_utils/spineTextureAtlasLoader';
+import { spineLoaderExtension } from '../../../shared/context/pet/_utils/spineLoaderExtension';
+import { spineTextureAtlasLoader } from '../../../shared/context/pet/_utils/spineTextureAtlasLoader';
 import { BackgroundLayer } from './_layer/bg_layer';
 import { KeysType, optionConfigPet, optionPetLayerType, renderManagerType } from 'src/shared/type/pet-type';
 import { defaultPet, moveConfig, zindex } from 'src/config/pet-config';

@@ -8,6 +8,7 @@ import { BackgroundLayer } from 'src/sections/component/pet/_layer/bg_layer';
 import { ApplicationCustom } from 'src/sections/component/pet/_utils/ApplicationCustom';
 
 import { Keys } from '../constain';
+import { BaseLayer } from 'src/sections/component/pet/_layer/base_layer';
 
 export type resourcesType = {
   cat: ISpineResource<ISkeletonData>;
@@ -63,3 +64,10 @@ export type renderManagerType = Partial<{
 export type listContainerType = Container[];
 
 export type KeysType = Keys;
+
+export type PetContextType = {
+  cat: ISpineResource<ISkeletonData>;
+};
+
+//liveblock
+export type projectileJson = positionType & optionConfigProjectile;
