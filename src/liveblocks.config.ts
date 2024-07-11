@@ -1,6 +1,7 @@
+import { createLiveblocksContext, createRoomContext } from '@liveblocks/react';
 import { createClient, LiveList, LiveMap, LiveObject } from '@liveblocks/client';
-import { createRoomContext } from '@liveblocks/react';
-import { positionType, projectileJson } from './shared/type/pet-type';
+
+import { effectBadType, effectGoodType, positionType, projectileJson } from './shared/type/pet-type';
 
 const client = createClient({
   throttle: 16,
@@ -9,13 +10,16 @@ const client = createClient({
 
 type Presence = {
   pet: {
-    position: { x: number; y: number };
+    position: positionType;
     loyalty: number;
     animation: string;
     projectile: projectileJson[];
     skin: string;
     name: string;
-    customSkin: {
+    effectGood: effectGoodType[];
+    effectBad: effectBadType[];
+    iddle: string;
+    customSkin: Partial<{
       eyes: string;
       hat: string;
       glasses: string;
@@ -25,7 +29,7 @@ type Presence = {
       faceMask: string;
       companion: string;
       rod: string;
-    } | null;
+    }>;
   };
 };
 
@@ -86,3 +90,12 @@ export const {
     useRemoveReaction,
   },
 } = createRoomContext<Presence, Storage, UserMeta, RoomEvent, ThreadMetadata>(client);
+
+export const {
+  suspense: {
+    LiveblocksProvider,
+    useInboxNotifications,
+    useUnreadInboxNotificationsCount,
+    useMarkAllInboxNotificationsAsRead,
+  },
+} = createLiveblocksContext(client);

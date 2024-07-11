@@ -69,5 +69,19 @@ export type PetContextType = {
   cat: ISpineResource<ISkeletonData>;
 };
 
+export type effectType = {
+  type: string;
+  time: number;
+  dame: number;
+  incremental?: boolean;
+};
+export type effectGoodType = effectType & {
+  acceleration: boolean;
+};
+export type effectBadType = effectType & {
+  notMove: boolean;
+  stunned: boolean;
+};
+
 //liveblock
 export type projectileJson = positionType & optionConfigProjectile;

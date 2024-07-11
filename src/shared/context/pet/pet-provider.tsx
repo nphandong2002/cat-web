@@ -1,9 +1,14 @@
 'use client';
 
+import { LiveList, LiveMap, LiveObject } from '@liveblocks/client';
+import { ClientSideSuspense } from '@liveblocks/react';
+
 import { TextureAtlas } from 'pixi-spine';
 import { Assets, LoaderParser } from 'pixi.js';
 import { ReactNode, useEffect, useState } from 'react';
 
+import { RoomProvider } from 'src/liveblocks.config';
+import { defaultInitPet } from 'src/config/pet-config';
 import { PetContextType } from 'src/shared/type/pet-type';
 import { defaultSkeletonData } from 'src/shared/constain/pet-constain';
 
@@ -26,7 +31,22 @@ function PetProvider({ children }: { children: ReactNode }) {
       setvalue(a);
     });
   }, [setvalue]);
-  return <PetContext.Provider value={value}>{children}</PetContext.Provider>;
+  return (
+    <RoomProvider
+      id="112345456841"
+      initialPresence={{
+        pet: defaultInitPet,
+      }}
+      initialStorage={{
+        layerIds: new LiveList([]),
+        layers: new LiveMap<string, LiveObject<any>>(),
+      }}
+    >
+      <ClientSideSuspense fallback={<></>}>
+        <PetContext.Provider value={value}>{children}</PetContext.Provider>
+      </ClientSideSuspense>
+    </RoomProvider>
+  );
 }
 
 export default PetProvider;

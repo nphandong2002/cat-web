@@ -1,3 +1,5 @@
+'use client';
+
 import { createContext, useContext } from 'react';
 import { PetContextType } from 'src/shared/type/pet-type';
 
