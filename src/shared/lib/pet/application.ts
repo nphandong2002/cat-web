@@ -2,7 +2,9 @@
 
 import { Layer, Stage } from '@pixi/layers';
 import { Application, Container, ResizePlugin, TickerPlugin } from 'pixi.js';
-import { resourcesType } from 'src/shared/type/pet-type';
+import { optionPetLayerType, petJson, resourcesType } from 'src/shared/type/pet-type';
+import { PetLayer } from './_layer/pet_layer';
+import { zindex } from 'src/config/pet-config';
 
 !Application._plugins.includes(TickerPlugin) && Application._plugins.push(TickerPlugin);
 !Application._plugins.includes(ResizePlugin) && Application._plugins.push(ResizePlugin);
@@ -37,5 +39,13 @@ export class ApplicationCustom extends Application {
     this.renderer.view.style && (this.renderer.view.style.touchAction = 'auto');
     this.ticker.maxFPS = 60;
   }
-  setSeftPet() {}
+  setSeflPet(json: petJson, op: optionPetLayerType) {
+    let petlayer = new PetLayer(this.resources, {
+      height: this.screen.height,
+      width: this.screen.width,
+      ...op,
+      ...json,
+    });
+    this.pets.addChild(petlayer.container);
+  }
 }

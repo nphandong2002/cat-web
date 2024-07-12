@@ -14,7 +14,11 @@ function RoomPage() {
   const app = new ApplicationCustom({
     resources: resources,
   });
-  useEffect(() => {}, [users]);
+  useEffect(() => {
+    app.setSeflPet(currentUser.presence.pet, {
+      scale: 0.3,
+    });
+  }, [currentUser]);
   useEffect(() => {
     if (divRef.current && divRef.current.querySelector('canvas')) {
       divRef.current.appendChild(app.view as unknown as HTMLCanvasElement);

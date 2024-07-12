@@ -85,3 +85,25 @@ export type effectBadType = effectType & {
 
 //liveblock
 export type projectileJson = positionType & optionConfigProjectile;
+export type petJson = {
+  position: positionType;
+  loyalty: number;
+  animation: string;
+  projectile: projectileJson[];
+  skin: string;
+  name: string;
+  effectGood: effectGoodType[];
+  effectBad: effectBadType[];
+  iddle: string;
+  customSkin: Partial<{
+    eyes: string;
+    hat: string;
+    glasses: string;
+    mask: string;
+    wings: string;
+    costume: string;
+    faceMask: string;
+    companion: string;
+    rod: string;
+  }>;
+};
