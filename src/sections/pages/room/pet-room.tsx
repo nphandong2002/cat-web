@@ -10,23 +10,26 @@ function RoomPage() {
   const currentUser = useSelf();
   const divRef = useRef<HTMLDivElement>(null);
   const resources = usePetContext();
+  const [application, setapplication] = useState<ApplicationCustom>();
 
-  const app = new ApplicationCustom({
-    resources: resources,
-  });
   useEffect(() => {
-    app.setSeflPet(currentUser.presence.pet, {
+    application?.setSeflPet(currentUser.presence.pet, {
       scale: 0.3,
     });
-  }, [currentUser]);
+  }, [currentUser, application]);
   useEffect(() => {
-    if (divRef.current && divRef.current.querySelector('canvas')) {
+    if (divRef.current && !divRef.current.querySelector('canvas')) {
+      const app = new ApplicationCustom({
+        resources: resources,
+      });
       divRef.current.appendChild(app.view as unknown as HTMLCanvasElement);
       app.resizeTo = divRef.current;
+      setapplication(app);
     }
-  }, [divRef, app]);
+    return application?.destroy();
+  }, [divRef, resources, setapplication]);
 
-  return <div ref={divRef} className="h-screen"></div>;
+  return <div ref={divRef}></div>;
 }
 
 export default RoomPage;

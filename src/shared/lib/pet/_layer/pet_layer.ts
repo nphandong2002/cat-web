@@ -1,9 +1,13 @@
 import { Skin, Spine, SkeletonData } from '@pixi-spine/runtime-4.1';
 
 import { action, feeling, idleType } from 'src/shared/constain/pet-constain';
-import { optionPetLayerType, resourcesType, statsType } from 'src/shared/type/pet-type';
+import { optionPetLayerType, projectileJson, resourcesType, statsType } from 'src/shared/type/pet-type';
 
 import { BaseLayer } from './base_layer';
+import { ProjectileLayer } from './projectile_layer';
+import { moveConfig, zindex } from 'src/config/pet-config';
+import { colors, Keys } from 'src/shared/constain';
+import { Graphics } from 'pixi.js';
 
 var n = idleType,
   i = feeling,
@@ -23,9 +27,12 @@ export class PetLayer extends BaseLayer {
     this.resources = resources;
     this.stats = {
       skin: option.skin,
-      direction: 'right',
+      direction: Keys.RIGHT,
       scale: option.scale,
       animation: option.animation,
+      dame: option.dame,
+      attackSpeed: option.attackSpeed,
+      projectileImage: colors[Math.floor(Math.random() * colors.length)],
     };
     this.rendererPet = new Spine(resources.cat.spineData as SkeletonData);
     this.rendererPet.filters = [];
@@ -59,8 +66,13 @@ export class PetLayer extends BaseLayer {
     this.container.position.x = this.viewport.width / 2;
     this.container.position.y = this.viewport.height / 2;
   }
+  move(): void {
+    this.container.position.x = this.viewport.width / 2;
+    this.container.position.y = this.viewport.height / 2;
+  }
   setDirection() {
-    this.container.scale.x = (this.stats.direction == 'right' ? 1 : -1) * this.stats.scale;
+    (this.stats.direction == Keys.RIGHT || this.stats.direction == Keys.LEFT) &&
+      (this.container.scale.x = (this.stats.direction == Keys.RIGHT ? 1 : -1) * this.stats.scale);
   }
   clearAnimation() {}
   changeAnimation(trackIndex: number, animation: string, loop: boolean) {
@@ -78,5 +90,14 @@ export class PetLayer extends BaseLayer {
     i.addSkin(this.resources.cat.spineData.findSkin('bow-arrow/type1') as Skin);
     this.rendererPet.skeleton.setSkin(i);
     this.rendererPet.skeleton.setToSetupPose();
+  }
+
+  canAction(): boolean {
+    return !this.status.some((s) => {
+      if ('stunned' in s && 'die' in s) {
+        return s.stunned || s.die;
+      }
+      return false;
+    });
   }
 }

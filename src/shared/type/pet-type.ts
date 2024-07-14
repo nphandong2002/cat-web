@@ -25,7 +25,6 @@ export type optionLayerType = Partial<viewportType> &
   Partial<positionType> & {
     zIndex: number;
     zOrder?: number;
-    rotation?: number;
     speed: number;
   };
 
@@ -33,13 +32,19 @@ export type optionConfigPet = {
   skin: string;
   animation: string;
   scale: number;
+  dame: number;
+  attackSpeed: number;
+  name: string;
 };
 export type optionConfigBg = {
   scale: number;
 };
 export type optionConfigProjectile = {
   dame: number;
-  image?: string;
+  velocity: positionType;
+  image: string | number;
+  decay: number;
+  speed: number;
 };
 export type optionProjectileLayerType = optionLayerType & optionConfigProjectile;
 
@@ -48,9 +53,12 @@ export type optionPetLayerType = optionLayerType & optionConfigPet;
 
 export type statsType = {
   skin: string;
-  direction: 'right' | 'left';
+  direction: Keys;
   scale: number;
   animation: string;
+  dame: number;
+  attackSpeed: number;
+  projectileImage: number | string;
 };
 export type renderManagerType = Partial<{
   app: ApplicationCustom;
@@ -81,17 +89,16 @@ export type effectGoodType = effectType & {
 export type effectBadType = effectType & {
   notMove: boolean;
   stunned: boolean;
+  die: boolean;
 };
-
+export type statusType = (effectGoodType | effectBadType)[];
 //liveblock
 export type projectileJson = positionType & optionConfigProjectile;
-export type petJson = {
+export type petJson = optionConfigPet & {
   position: positionType;
   loyalty: number;
   animation: string;
   projectile: projectileJson[];
-  skin: string;
-  name: string;
   effectGood: effectGoodType[];
   effectBad: effectBadType[];
   iddle: string;

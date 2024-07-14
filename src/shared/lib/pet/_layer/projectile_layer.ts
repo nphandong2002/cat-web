@@ -1,19 +1,29 @@
 import { Graphics, Sprite } from 'pixi.js';
 
-import { optionProjectileLayerType } from 'src/shared/type/pet-type';
+import { optionConfigProjectile, optionProjectileLayerType } from 'src/shared/type/pet-type';
 import { BaseLayer } from './base_layer';
 
 export class ProjectileLayer extends BaseLayer {
-  color: number;
+  stats: optionConfigProjectile;
   constructor(option: optionProjectileLayerType) {
     super(option);
-    this.color = [0x89abcd, 0xffbd01][Math.floor(Math.random() * 5)];
+    this.stats = {
+      ...option,
+    };
+    const projectile = typeof option.image == 'string' ? Sprite.from(option.image) : this.getGraphics(option.image);
+    this.container.addChild(projectile);
+  }
+  getGraphics(color: number) {
     const graphics = new Graphics();
-    graphics.lineStyle(10, this.color, 1);
-    graphics.beginFill(0xc34288, 1);
+    graphics.beginFill(color, 1);
     graphics.drawCircle(0, 0, 50);
     graphics.endFill();
-    const projectile = option.image ? Sprite.from(option.image) : graphics;
-    this.container.addChild(projectile);
+    return graphics;
+  }
+  update() {
+    this.container.position.x += Math.cos(Math.atan2(this.stats.velocity.x, this.stats.velocity.y)) * this.speed;
+    this.container.position.y += Math.sin(Math.atan2(this.stats.velocity.x, this.stats.velocity.y)) * this.speed;
+    this.stats.decay--;
+    this.move();
   }
 }

@@ -3,7 +3,8 @@ import { idleType } from 'src/shared/constain/pet-constain';
 import uuidv4 from 'src/shared/utils/uuidv4';
 
 export const zindex = {
-  pet: 4,
+  projectile: 2,
+  pet: 1,
   bg: 0,
 };
 export const defaultPet = {
@@ -27,6 +28,9 @@ export const defaultInitPet = {
   effectBad: [],
   iddle: 'idle',
   customSkin: {},
+  attachSpeed: 10,
+  dame: 25,
+  speed: 13,
 };
 
 export const moveConfig = {
