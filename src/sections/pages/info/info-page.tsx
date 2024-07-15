@@ -3,9 +3,7 @@
 import Image from 'next/image';
 
 import { useState } from 'react';
-
-import { listPetPro } from '../../component/pet/cat-config';
-import CatLayer from '../../component/pet/pet-layer';
+import { listPetPro } from 'src/shared/constain/pet-constain';
 
 export default function CatPage() {
   const [skinName, setskinName] = useState(listPetPro[0].tag);
@@ -25,9 +23,7 @@ export default function CatPage() {
           />
         ))}
       </div>
-      <div className="basis-1/2">
-        <CatLayer skinName={skinName} />
-      </div>
+      <div className="basis-1/2"></div>
     </div>
   );
 }

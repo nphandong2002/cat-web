@@ -1,25 +1,36 @@
 import { Container } from 'pixi.js';
+
 import { moveConfig } from 'src/config/pet-config';
-import { KeysType, optionLayerType, statsType, statusType, viewportType } from 'src/shared/type/pet-type';
+import { BaseOptionLayer, KeysType, PrototypeLayer, StatusType, ViewportType } from 'src/shared/type/pet-type';
 export class BaseLayer {
   container: Container;
-  viewport: viewportType;
   key: KeysType[];
   speed: number;
-  status: statusType;
-  constructor(op: optionLayerType) {
-    this.status = [];
-    this.container = new Container();
-    this.viewport = {
-      height: op.height || 0,
-      width: op.width || 0,
-    };
-    this.container.zIndex = op.zIndex;
-    this.container.zOrder = op.zOrder;
-    this.container.position.x = op.x || 0;
-    this.container.position.y = op.y || 0;
+  status: StatusType;
+  viewport: ViewportType;
+  properties: PrototypeLayer;
+  constructor(option: BaseOptionLayer) {
     this.key = [];
-    this.speed = op.speed;
+    this.properties = {
+      name: option.name,
+      speed: option.speed,
+      dame: option.dame,
+      attackSpeed: option.attackSpeed,
+    };
+    this.viewport = {
+      height: option.height,
+      width: option.width,
+      zIndex: option.zIndex,
+      scale: option.scale,
+    };
+    this.status = [];
+    this.speed = option.speed;
+    this.container = new Container();
+  }
+  initContainer() {
+    this.container.zIndex = this.viewport.zIndex;
+    this.container.scale.x = this.viewport.scale;
+    this.container.scale.y = this.viewport.scale;
   }
   setScale(s: number) {
     this.container.scale.x = s;
@@ -44,7 +55,7 @@ export class BaseLayer {
   }
   move() {
     let key = this.key[0];
-    if (key) {
+    if (key && moveConfig[key]) {
       let { x, y } = moveConfig[key];
       x != 0 && (this.container.position.x += x * this.speed);
       y != 0 && (this.container.position.y += y * this.speed);

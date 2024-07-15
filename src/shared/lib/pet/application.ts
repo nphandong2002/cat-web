@@ -1,161 +1,94 @@
 'use client';
 
-import { Layer, Stage } from '@pixi/layers';
 import { Application, Container, ResizePlugin, TickerPlugin } from 'pixi.js';
 
-import { defaultInitPet, zindex } from 'src/config/pet-config';
-import { KeysType, optionConfigPet, petJson, resourcesType } from 'src/shared/type/pet-type';
+import { KeysType } from 'src/shared/type/pet-type';
 
-import { PetLayer } from './_layer/pet_layer';
-import { BackgroundLayer } from './_layer/bg_layer';
 import { Keys } from 'src/shared/constain';
 import { BaseLayer } from './_layer/base_layer';
-import { ProjectileLayer } from './_layer/projectile_layer';
+import { PetLayer } from './_layer/pet_layer';
+import { defaultApplication, zindex } from 'src/config/pet-config';
+import { BackgroundLayer } from './_layer/bg_layer';
+import { Layer, Stage } from '@pixi/layers';
 
 !Application._plugins.includes(TickerPlugin) && Application._plugins.push(TickerPlugin);
 !Application._plugins.includes(ResizePlugin) && Application._plugins.push(ResizePlugin);
 
 export class ApplicationCustom extends Application {
-  layer: Layer;
-  layers: BaseLayer[];
-  pets: Container;
-  currentPet?: PetLayer;
+  petLayers: BaseLayer[];
+  currentPet: PetLayer;
   background: BackgroundLayer;
-  resources: resourcesType;
-  private mouseX: number;
-  private mouseY: number;
-  projectiles: ProjectileLayer[];
-
+  container: Container;
+  layer: Layer;
   constructor(op: any) {
     super({
-      backgroundColor: '#fff',
-      backgroundAlpha: 0,
-      clearBeforeRender: true,
-      context: null,
-      antialias: true,
-      powerPreference: 'default',
-      premultipliedAlpha: true,
-      preserveDrawingBuffer: true,
-      hello: true,
+      ...defaultApplication,
       ...op,
     });
-    this.layers = [];
-    this.projectiles = [];
-
-    this.mouseX = 0;
-    this.mouseY = 0;
-    this.resources = op.resources;
+    this.stage = new Stage();
     this.layer = new Layer();
     this.layer.group.enableSort = true;
-    this.pets = new Container();
-    this.stage = new Stage();
-    this.pets.parentLayer = this.layer;
-    this.pets.zOrder = 4;
-    this.stage.addChild(this.layer);
-    this.stage.addChild(this.pets);
-    this.renderer.plugins.interaction.autoPreventDefault = false;
-    this.renderer.view.style && (this.renderer.view.style.touchAction = 'auto');
+    this.container = new Container();
     this.background = new BackgroundLayer({
-      height: this.view.height,
-      width: this.view.width,
-      x: 0,
-      y: 0,
       zIndex: zindex.bg,
-      speed: 10,
       scale: 2,
+      name: 'background',
+      speed: 10,
+      dame: 0,
+      attackSpeed: 0,
     });
-    this.pets.addChild(this.background.container);
-    this.ticker.maxFPS = 60;
+    this.currentPet = new PetLayer(op.resources, {
+      ...op.dataPet.layer,
+    });
+
+    this.background.setPosition(op.dataPet.position.x, op.dataPet.position.y);
+    this.currentPet.setPosition(this.view.width / 2, this.view.height / 2);
+    this.petLayers = [];
+    this.stage.eventMode = 'static';
+    this.stage.hitArea = this.screen;
+    this.container.parentLayer = this.layer;
+    this.init();
     this.loop();
     this.event();
   }
-  setSeflPet(json: petJson, op: Partial<optionConfigPet>) {
-    if (this.currentPet) {
-      this.pets.removeChild(this.currentPet.container);
-      this.layers.splice(
-        this.layers.findIndex((a) => a === this.currentPet),
-        1,
-      );
-    }
-    this.currentPet = new PetLayer(this.resources, {
-      height: this.screen.height,
-      width: this.screen.width,
-      zIndex: zindex.pet,
-      zOrder: zindex.pet,
-      ...defaultInitPet,
-      ...json,
-      scale: op.scale || 1,
-    });
-    this.background.container.position = json.position;
-    this.pets.addChild(this.currentPet.container);
-    this.layers.push(this.currentPet);
-    this.layers.push(this.background);
+  init() {
+    this.ticker.maxFPS = 60;
+    this.renderer.plugins.interaction.autoPreventDefault = false;
+    this.renderer.view.style && (this.renderer.view.style.touchAction = 'auto');
+    this.stage.addChild(this.layer);
+    this.stage.addChild(this.container);
+    this.container.addChild(this.background.container);
+    this.container.addChild(this.currentPet.container);
   }
+
   loop() {
     this.ticker.add(() => {
-      this.layers.forEach((a) => {
+      this.petLayers.forEach((a) => {
         a.update();
       });
-      if (!this.currentPet) return;
-      let k = this.currentPet.key[0];
-      if (k) {
-        this.currentPet.stats.direction = k;
-        this.currentPet.canAction() && this.background.move();
-        this.currentPet.setDirection();
-      }
-      this.currentPet.changeAnimation(0, k ? 'walk' : 'idle', true);
+      this.currentPet.canAction() && this.background.update();
+      this.currentPet.update();
     });
   }
   event() {
     const keydownHandle = (e: KeyboardEvent) => {
-      Object.values(Keys).includes(e.keyCode as Keys) &&
-        Object.values(this.layers).forEach((a) => {
-          a.addKey(e.keyCode as KeysType);
-        });
-      if (this.currentPet && e.keyCode == 32 && this.currentPet.canAction()) {
-        console.log(this.mouseX);
+      this.currentPet.addKey(e.keyCode as KeysType);
+      this.background.addKey(e.keyCode as KeysType);
 
-        this.addProtitle(
-          this.currentPet.container.x - this.currentPet.container.width,
-          this.currentPet.container.y - this.currentPet.container.height,
-          this.mouseX,
-          this.mouseY,
-          this.currentPet.stats.projectileImage,
-          this.currentPet.stats.dame,
-        );
-      }
+      Object.values(this.petLayers).forEach((a) => {
+        a.addKey(e.keyCode as KeysType);
+      });
     };
-
     const keyupHandle = (e: KeyboardEvent) => {
-      Object.values(Keys).includes(e.keyCode as Keys) &&
-        Object.values(this.layers).forEach((a) => {
-          a.removeKey(e.keyCode as KeysType);
-        });
+      this.currentPet.removeKey(e.keyCode as KeysType);
+      this.background.removeKey(e.keyCode as KeysType);
+
+      Object.values(this.petLayers).forEach((a) => {
+        a.removeKey(e.keyCode as KeysType);
+      });
     };
-    this.stage.eventMode = 'static';
-    this.stage.hitArea = this.screen;
-    this.stage.on('mousemove', (event) => {
-      this.mouseX = event.global.x;
-      this.mouseY = event.global.y;
-    });
+    this.stage.on('mousemove', (event) => {});
     window.addEventListener('keydown', keydownHandle);
     window.addEventListener('keyup', keyupHandle);
-  }
-  addProtitle(x: number, y: number, velocityx: number, velocityy: number, image: string | number, dame: number) {
-    let p = new ProjectileLayer({
-      x: x,
-      y: y,
-      velocity: {
-        x: velocityx,
-        y: velocityy,
-      },
-      speed: 10,
-      decay: 40,
-      image: image,
-      zIndex: zindex.projectile,
-      dame: dame,
-    });
-    this.pets.addChild(p.container);
-    this.layers.push(p);
   }
 }

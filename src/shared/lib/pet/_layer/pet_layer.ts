@@ -1,51 +1,42 @@
 import { Skin, Spine, SkeletonData } from '@pixi-spine/runtime-4.1';
 
+import { Keys } from 'src/shared/constain';
 import { action, feeling, idleType } from 'src/shared/constain/pet-constain';
-import { optionPetLayerType, projectileJson, resourcesType, statsType } from 'src/shared/type/pet-type';
+import { PetContextType, PetOptionLayer, ViewLayerPet } from 'src/shared/type/pet-type';
 
 import { BaseLayer } from './base_layer';
-import { ProjectileLayer } from './projectile_layer';
-import { moveConfig, zindex } from 'src/config/pet-config';
-import { colors, Keys } from 'src/shared/constain';
-import { Graphics } from 'pixi.js';
 
-var n = idleType,
-  i = feeling,
-  a = action,
-  versionPet = [
-    { v: 'v1', skin: [] },
-    { v: 'v2', skin: ['husky', 'choco', 'cheetah'] },
-    { v: 'v3', skin: ['koala'] },
-    { v: 'v4', skin: ['howie'] },
-  ];
 export class PetLayer extends BaseLayer {
-  resources: resourcesType;
+  resources: PetContextType;
   rendererPet: Spine;
-  stats: statsType;
-  constructor(resources: resourcesType, option: optionPetLayerType) {
+  stats: ViewLayerPet;
+  constructor(resources: any, option: PetOptionLayer) {
     super(option);
     this.resources = resources;
+
     this.stats = {
       skin: option.skin,
       direction: Keys.RIGHT,
-      scale: option.scale,
       animation: option.animation,
-      dame: option.dame,
-      attackSpeed: option.attackSpeed,
-      projectileImage: colors[Math.floor(Math.random() * colors.length)],
     };
+
     this.rendererPet = new Spine(resources.cat.spineData as SkeletonData);
     this.rendererPet.filters = [];
-    this.container.addChild(this.rendererPet);
     this.rendererPet.state.setAnimation(0, option.animation, true);
+    this.container.addChild(this.rendererPet);
+    this.initData();
+  }
+  initData() {
     this.setMixAction();
     this.changeSkin(this.stats.skin);
-    this.setScale(option.scale);
     this.setDirection();
     this.setPosition(0, 0);
     this.changeAnimation(0, 'idle', true);
   }
-  private setMixAction() {
+  setMixAction() {
+    var n = idleType,
+      i = feeling,
+      a = action;
     for (var o in n) {
       for (var h in n) this.rendererPet.stateData.setMix(n[o], n[h], 0.2);
       for (var l in i) this.rendererPet.stateData.setMix(n[o], i[l], 0.3);
@@ -63,16 +54,24 @@ export class PetLayer extends BaseLayer {
     }
   }
   setPosition(x: number, y: number): void {
-    this.container.position.x = this.viewport.width / 2;
-    this.container.position.y = this.viewport.height / 2;
+    this.container.position.x = x;
+    this.container.position.y = y;
   }
-  move(): void {
-    this.container.position.x = this.viewport.width / 2;
-    this.container.position.y = this.viewport.height / 2;
+  update(): void {
+    this.move();
+    let k = this.key[0];
+    if (k && this.canAction()) {
+      this.stats.direction = k;
+      this.setDirection();
+      this.changeAnimation(0, 'walk', true);
+    } else {
+      this.changeAnimation(0, 'idle', true);
+    }
   }
+  move() {}
   setDirection() {
     (this.stats.direction == Keys.RIGHT || this.stats.direction == Keys.LEFT) &&
-      (this.container.scale.x = (this.stats.direction == Keys.RIGHT ? 1 : -1) * this.stats.scale);
+      (this.container.scale.x = (this.stats.direction == Keys.RIGHT ? 1 : -1) * this.viewport.scale);
   }
   clearAnimation() {}
   changeAnimation(trackIndex: number, animation: string, loop: boolean) {

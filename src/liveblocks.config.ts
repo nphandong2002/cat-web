@@ -1,7 +1,7 @@
 import { createLiveblocksContext, createRoomContext } from '@liveblocks/react';
 import { createClient, LiveList, LiveMap, LiveObject } from '@liveblocks/client';
 
-import { effectBadType, effectGoodType, petJson, positionType, projectileJson } from './shared/type/pet-type';
+import { petJson } from './shared/type/pet-type';
 
 const client = createClient({
   throttle: 16,
@@ -13,8 +13,8 @@ type Presence = {
 };
 
 type Storage = {
-  layers: LiveMap<string, LiveObject<Presence>>;
-  layerIds: LiveList<projectileJson>;
+  layers: LiveMap<string, LiveObject<petJson>>;
+  layerIds: LiveList<string>;
 };
 
 type UserMeta = {

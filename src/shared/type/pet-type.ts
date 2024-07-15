@@ -1,107 +1,66 @@
-import { Container } from 'pixi.js';
-
 import { ISkeletonData } from '@pixi-spine/base';
 import { ISpineResource } from '@pixi-spine/loader-base';
 
-import { PetLayer } from 'src/sections/component/pet/_layer/pet_layer';
-import { BackgroundLayer } from 'src/sections/component/pet/_layer/bg_layer';
-import { ApplicationCustom } from 'src/sections/component/pet/_utils/ApplicationCustom';
-
 import { Keys } from '../constain';
-import { BaseLayer } from 'src/sections/component/pet/_layer/base_layer';
 
-export type resourcesType = {
-  cat: ISpineResource<ISkeletonData>;
-};
-export type viewportType = {
-  height: number;
-  width: number;
-};
-export type positionType = {
-  x: number;
-  y: number;
-};
-export type optionLayerType = Partial<viewportType> &
-  Partial<positionType> & {
-    zIndex: number;
-    zOrder?: number;
-    speed: number;
-  };
-
-export type optionConfigPet = {
-  skin: string;
-  animation: string;
+export type ViewportType = {
+  height?: number;
+  width?: number;
+  zIndex: number;
   scale: number;
-  dame: number;
-  attackSpeed: number;
+};
+export type PrototypeLayer = {
   name: string;
-};
-export type optionConfigBg = {
-  scale: number;
-};
-export type optionConfigProjectile = {
-  dame: number;
-  velocity: positionType;
-  image: string | number;
-  decay: number;
   speed: number;
-};
-export type optionProjectileLayerType = optionLayerType & optionConfigProjectile;
-
-export type optionBgLayerType = optionLayerType & optionConfigBg;
-export type optionPetLayerType = optionLayerType & optionConfigPet;
-
-export type statsType = {
-  skin: string;
-  direction: Keys;
-  scale: number;
-  animation: string;
   dame: number;
   attackSpeed: number;
-  projectileImage: number | string;
 };
-export type renderManagerType = Partial<{
-  app: ApplicationCustom;
-  resources: resourcesType;
-  layer: {
-    bgLayer: BackgroundLayer;
-    petLayer: PetLayer;
-  };
-}>;
-
-export type listContainerType = Container[];
-
 export type KeysType = Keys;
+export type BaseOptionLayer = Partial<{ x: number; y: number }> & ViewportType & PrototypeLayer;
 
-export type PetContextType = {
-  cat: ISpineResource<ISkeletonData>;
+export type ViewLayerPet = {
+  skin: string;
+  animation: string;
+  direction: Keys;
 };
+export type PetOptionLayer = BaseOptionLayer & ViewLayerPet;
 
-export type effectType = {
+export type EffectType = {
   type: string;
   time: number;
   dame: number;
   incremental?: boolean;
 };
-export type effectGoodType = effectType & {
+
+export type EffectGoodType = EffectType & {
   acceleration: boolean;
 };
-export type effectBadType = effectType & {
+export type EffectBadType = EffectType & {
   notMove: boolean;
   stunned: boolean;
   die: boolean;
 };
-export type statusType = (effectGoodType | effectBadType)[];
+export type StatusType = (EffectGoodType | EffectBadType)[];
+
+export type PetContextType = {
+  cat: ISpineResource<ISkeletonData>;
+};
+
+export type ProjectileProtype = PrototypeLayer & {
+  velocity: { x: number; y: number };
+  image: string | number;
+  decay: number;
+};
 //liveblock
-export type projectileJson = positionType & optionConfigProjectile;
-export type petJson = optionConfigPet & {
-  position: positionType;
+export type mapData = {
+  projectile: ProjectileProtype[];
+};
+export type petJson = {
+  position: { x: number; y: number };
   loyalty: number;
-  animation: string;
-  projectile: projectileJson[];
-  effectGood: effectGoodType[];
-  effectBad: effectBadType[];
-  iddle: string;
+  layer: BaseOptionLayer;
+  effectGood: EffectGoodType[];
+  effectBad: EffectBadType[];
   customSkin: Partial<{
     eyes: string;
     hat: string;

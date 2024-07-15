@@ -12,22 +12,21 @@ function RoomPage() {
   const resources = usePetContext();
   const [application, setapplication] = useState<ApplicationCustom>();
 
-  useEffect(() => {
-    application?.setSeflPet(currentUser.presence.pet, {
-      scale: 0.3,
-    });
-  }, [currentUser, application]);
+  useEffect(() => {}, [currentUser, application]);
   useEffect(() => {
     if (divRef.current && !divRef.current.querySelector('canvas')) {
+      console.log(currentUser.presence.pet);
       const app = new ApplicationCustom({
         resources: resources,
+        dataPet: currentUser.presence.pet,
       });
+
       divRef.current.appendChild(app.view as unknown as HTMLCanvasElement);
       app.resizeTo = divRef.current;
       setapplication(app);
     }
     return application?.destroy();
-  }, [divRef, resources, setapplication]);
+  }, [divRef, resources, setapplication, currentUser, application]);
 
   return <div ref={divRef}></div>;
 }
