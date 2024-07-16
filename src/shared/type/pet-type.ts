@@ -3,27 +3,55 @@ import { ISpineResource } from '@pixi-spine/loader-base';
 
 import { Keys } from '../constain';
 
-export type ViewportType = {
+export type InfoType = {
+  name: string;
+  loyalty: number;
+};
+export type AppearanceType = {
   height?: number;
   width?: number;
   zIndex: number;
   scale: number;
 };
-export type PrototypeLayer = {
-  name: string;
+
+export type StatsType = {
   speed: number;
   dame: number;
   attackSpeed: number;
 };
-export type KeysType = Keys;
-export type BaseOptionLayer = Partial<{ x: number; y: number }> & ViewportType & PrototypeLayer;
-
-export type ViewLayerPet = {
+export type PositionType = {
+  x: number;
+  y: number;
+};
+export type VisualsPet = {
   skin: string;
   animation: string;
   direction: Keys;
 };
-export type PetOptionLayer = BaseOptionLayer & ViewLayerPet;
+export type CustomSkin = Partial<{
+  eyes: string;
+  hat: string;
+  glasses: string;
+  mask: string;
+  wings: string;
+  costume: string;
+  faceMask: string;
+  companion: string;
+  rod: string;
+}>;
+export type KeysType = Keys;
+export type BaseOptionLayer = PositionType & AppearanceType & InfoType & StatsType;
+export type BackgroundOptionLayer = PositionType & AppearanceType;
+export type PetOptionLayer = {
+  info: InfoType;
+  stats: StatsType;
+
+  appearance: AppearanceType;
+  position: PositionType;
+  visuals: VisualsPet;
+  customSkin: CustomSkin;
+  effect: StatusType[];
+};
 
 export type EffectType = {
   type: string;
@@ -46,30 +74,13 @@ export type PetContextType = {
   cat: ISpineResource<ISkeletonData>;
 };
 
-export type ProjectileProtype = PrototypeLayer & {
-  velocity: { x: number; y: number };
-  image: string | number;
-  decay: number;
-};
 //liveblock
-export type mapData = {
-  projectile: ProjectileProtype[];
-};
+
 export type petJson = {
   position: { x: number; y: number };
   loyalty: number;
   layer: BaseOptionLayer;
   effectGood: EffectGoodType[];
   effectBad: EffectBadType[];
-  customSkin: Partial<{
-    eyes: string;
-    hat: string;
-    glasses: string;
-    mask: string;
-    wings: string;
-    costume: string;
-    faceMask: string;
-    companion: string;
-    rod: string;
-  }>;
+  customSkin: CustomSkin;
 };

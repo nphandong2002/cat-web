@@ -12,10 +12,8 @@ function RoomPage() {
   const resources = usePetContext();
   const [application, setapplication] = useState<ApplicationCustom>();
 
-  useEffect(() => {}, [currentUser, application]);
   useEffect(() => {
     if (divRef.current && !divRef.current.querySelector('canvas')) {
-      console.log(currentUser.presence.pet);
       const app = new ApplicationCustom({
         resources: resources,
         dataPet: currentUser.presence.pet,
@@ -25,10 +23,9 @@ function RoomPage() {
       app.resizeTo = divRef.current;
       setapplication(app);
     }
-    return application?.destroy();
   }, [divRef, resources, setapplication, currentUser, application]);
 
-  return <div ref={divRef}></div>;
+  return <div className="h-screen" ref={divRef}></div>;
 }
 
 export default RoomPage;

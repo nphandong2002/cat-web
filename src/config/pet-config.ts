@@ -33,7 +33,7 @@ export const defaultInitPet = {
     dame: 25,
     speed: 13,
     zIndex: zindex.pet,
-    scale: 1,
+    scale: 0.3,
     attackSpeed: 10,
   },
   loyalty: 100,
