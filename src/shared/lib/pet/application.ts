@@ -15,7 +15,7 @@ import { Layer, Stage } from '@pixi/layers';
 !Application._plugins.includes(ResizePlugin) && Application._plugins.push(ResizePlugin);
 
 export class ApplicationCustom extends Application {
-  petLayers: BaseLayer[];
+  moveLayer: BaseLayer[];
   currentPet: PetLayer;
 
   background: BackgroundLayer;
@@ -24,16 +24,19 @@ export class ApplicationCustom extends Application {
       ...defaultApplication,
       ...option,
     });
-    this.petLayers = [];
+    this.moveLayer = [];
     this.currentPet = new PetLayer({
       ...option.dataPet,
+      resources: option.resources,
     });
-    this.petLayers.push(this.currentPet);
     this.background = new BackgroundLayer({
       x: this.currentPet.position.x,
       y: this.currentPet.position.y,
+      height: this.screen.height,
+      width: this.screen.width,
       zIndex: zindex.bg,
-      scale: 2,
+      scale: 1,
+      ...this.currentPet.stats,
     });
     this.init();
     this.loop();
@@ -54,16 +57,28 @@ export class ApplicationCustom extends Application {
     layer.group.enableSort = true;
     container.parentLayer = layer;
 
+    this.currentPet.container.x = this.view.width / 2;
+    this.currentPet.container.y = this.view.height / 2;
     container.addChild(this.background.container);
     container.addChild(this.currentPet.container);
     this.stage.addChild(layer);
     this.stage.addChild(container);
+
+    this.moveLayer.push(this.background);
   }
+
   render() {
     this.renderer.render(this.stage);
+    this.currentPet.container.x = this.screen.width / 2;
+    this.currentPet.container.y = this.screen.height / 2;
+    this.background.resize(this.screen.width, this.screen.height);
   }
   loop() {
-    this.ticker.add(() => {});
+    this.ticker.add(() => {
+      this.moveLayer.forEach((layer) => {
+        layer.move();
+      });
+    });
   }
   event() {}
 }

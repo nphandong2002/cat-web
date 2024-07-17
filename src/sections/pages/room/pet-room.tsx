@@ -13,7 +13,7 @@ function RoomPage() {
   const [application, setapplication] = useState<ApplicationCustom>();
 
   useEffect(() => {
-    if (divRef.current && !divRef.current.querySelector('canvas')) {
+    if (resources && divRef.current && !divRef.current.querySelector('canvas')) {
       const app = new ApplicationCustom({
         resources: resources,
         dataPet: currentUser.presence.pet,

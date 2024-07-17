@@ -41,7 +41,7 @@ export type CustomSkin = Partial<{
 }>;
 export type KeysType = Keys;
 export type BaseOptionLayer = PositionType & AppearanceType & InfoType & StatsType;
-export type BackgroundOptionLayer = PositionType & AppearanceType;
+export type BackgroundOptionLayer = PositionType & AppearanceType & StatsType;
 export type PetOptionLayer = {
   info: InfoType;
   stats: StatsType;
@@ -49,8 +49,9 @@ export type PetOptionLayer = {
   appearance: AppearanceType;
   position: PositionType;
   visuals: VisualsPet;
-  customSkin: CustomSkin;
+  customSkin?: CustomSkin;
   effect: StatusType[];
+  resources: PetContextType;
 };
 
 export type EffectType = {
@@ -76,11 +77,4 @@ export type PetContextType = {
 
 //liveblock
 
-export type petJson = {
-  position: { x: number; y: number };
-  loyalty: number;
-  layer: BaseOptionLayer;
-  effectGood: EffectGoodType[];
-  effectBad: EffectBadType[];
-  customSkin: CustomSkin;
-};
+export type petJson = Omit<PetOptionLayer, 'resources'>;

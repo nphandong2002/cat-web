@@ -8,7 +8,7 @@ import { Assets, LoaderParser } from 'pixi.js';
 import { ReactNode, useEffect, useState } from 'react';
 
 import { RoomProvider } from 'src/liveblocks.config';
-import { defaultInitPet } from 'src/config/pet-config';
+import { DefaultInitPet } from 'src/config/pet-config';
 import { PetContextType } from 'src/shared/type/pet-type';
 import { defaultSkeletonData } from 'src/shared/constain/pet-constain';
 
@@ -35,7 +35,7 @@ function PetProvider({ children }: { children: ReactNode }) {
     <RoomProvider
       id="112345456841"
       initialPresence={{
-        pet: defaultInitPet,
+        pet: DefaultInitPet,
       }}
       initialStorage={{
         layerIds: new LiveList([]),

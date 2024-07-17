@@ -1,10 +1,10 @@
-import { Container } from 'pixi.js';
+import { Container, Graphics } from 'pixi.js';
 
 import { moveConfig } from 'src/config/pet-config';
+import { Keys } from 'src/shared/constain';
 import {
   AppearanceType,
   BaseOptionLayer,
-  EffectType,
   InfoType,
   KeysType,
   PositionType,
@@ -45,26 +45,51 @@ export class BaseLayer {
     this.container.x = this.position.x;
     this.container.y = this.position.y;
     this.container.zIndex = this.appearance.zIndex;
-    this.container.scale.x = this.appearance.scale;
-    this.container.scale.y = this.appearance.scale;
+    this.container.zOrder = this.appearance.zIndex;
+    this.appearance.height && (this.container.height = this.appearance.height);
+    this.appearance.width && (this.container.width = this.appearance.width);
+
+    this.container.scale.x = this.appearance.scale || 1;
+    this.container.scale.y = this.appearance.scale || 1;
     this.listenKeyDown();
+  }
+  update() {}
+  move() {
+    let key = this.key[0];
+    if (key && moveConfig[key]) {
+      let { x, y } = moveConfig[key];
+      x != 0 && (this.position.x += x * this.stats.speed);
+      y != 0 && (this.position.y += y * this.stats.speed);
+      this.container.position.x = this.position.x;
+      this.container.position.y = this.position.y;
+    }
+  }
+  getGraphics(color: number) {
+    const graphics = new Graphics();
+    graphics.beginFill(color, 1);
+    graphics.drawCircle(0, 0, 50);
+    graphics.endFill();
+    return graphics;
   }
   listenKeyDown() {
     const keydownHandle = (e: KeyboardEvent) => {
-      if (!this.key.some((a) => a == e.keyCode)) this.key.unshift(e.keyCode);
+      if (Object.values(Keys).includes(e.key as Keys) && !this.key.some((a) => a == e.key))
+        this.key.unshift(e.key as Keys);
     };
     const keyupHandle = (e: KeyboardEvent) => {
-      if (this.key.some((a) => a == e.keyCode)) {
-        this.key.splice(
-          this.key.findIndex((a) => a == e.keyCode),
-          1,
-        );
+      if (Object.values(Keys).includes(e.key as Keys) && this.key.some((a) => a == e.key)) {
+        setTimeout(() => {
+          this.key.splice(
+            this.key.findIndex((a) => a == e.key),
+            1,
+          );
+        }, 50);
       }
-      window.addEventListener('visibilitychange', () => {
-        document.hidden && (this.key = []);
-      });
-      window.addEventListener('keydown', keydownHandle);
-      window.addEventListener('keyup', keyupHandle);
     };
+    window.addEventListener('visibilitychange', () => {
+      document.hidden && (this.key = []);
+    });
+    window.addEventListener('keydown', keydownHandle);
+    window.addEventListener('keyup', keyupHandle);
   }
 }
