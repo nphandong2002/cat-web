@@ -2,10 +2,9 @@ import { Sprite } from 'pixi.js';
 
 import { moveConfig, zindex } from 'src/config/pet-config';
 import { BackgroundOptionLayer } from 'src/shared/type/pet-type';
+import { DynamicLayer } from '../../layer/base/dynamic_layer';
 
-import { BaseLayer } from './base_layer';
-
-export class BackgroundLayer extends BaseLayer {
+export class BackgroundLayer extends DynamicLayer {
   constructor(option: BackgroundOptionLayer) {
     super({
       loyalty: 0,

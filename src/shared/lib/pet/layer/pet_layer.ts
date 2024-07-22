@@ -1,20 +1,23 @@
-import { VisualsPet } from './../../../type/pet-type';
+import { InfoPetType, StatsPetType, VisualsPet } from '../../../type/pet-type';
 import { Skin, Spine, SkeletonData } from '@pixi-spine/runtime-4.1';
 
 import { colors, Keys } from 'src/shared/constain';
 import { action, feeling, idleType } from 'src/shared/constain/pet-constain';
 import { PetContextType, PetOptionLayer } from 'src/shared/type/pet-type';
 
-import { BaseLayer } from './base_layer';
 import { zindex } from 'src/config/pet-config';
+import { DynamicLayer } from '../../layer/base/dynamic_layer';
 
 var n = idleType,
   i = feeling,
   a = action;
-export class PetLayer extends BaseLayer {
+export class PetLayer extends DynamicLayer {
   resources: PetContextType;
   rendererPet: Spine;
   visualsPet: VisualsPet;
+  info: InfoPetType;
+  stats: StatsPetType;
+
   constructor(option: PetOptionLayer) {
     super({
       ...option.info,
@@ -23,6 +26,12 @@ export class PetLayer extends BaseLayer {
       ...option.stats,
       zIndex: zindex.pet,
     });
+    this.info = {
+      ...option.info,
+    };
+    this.stats = {
+      ...option.stats,
+    };
     this.visualsPet = option.visuals;
     this.resources = option.resources;
     this.rendererPet = new Spine(this.resources.cat.spineData as SkeletonData);
@@ -33,6 +42,7 @@ export class PetLayer extends BaseLayer {
     this.rendererPet.filters = [];
     this.setMixAction();
     this.changeSkin(this.visualsPet.skin);
+    this.rendererPet.state.setAnimation(0, this.visualsPet.idle, true);
     this.container.addChild(this.rendererPet);
   }
   changeSkin(skin: string) {
@@ -43,6 +53,28 @@ export class PetLayer extends BaseLayer {
     i.addSkin(this.resources.cat.spineData.findSkin('bow-arrow/type1') as Skin);
     this.rendererPet.skeleton.setSkin(i);
     this.rendererPet.skeleton.setToSetupPose();
+  }
+  update() {
+    this.changeAnimation(0, this.key.length ? 'walk' : this.visualsPet.idle, true);
+    [Keys.RIGHT, Keys.LEFT].some((a) => a === this.key[0]) &&
+      (this.visualsPet.direction = this.key[0] == Keys.LEFT ? Keys.LEFT : Keys.RIGHT);
+    this.container.scale.x = (this.visualsPet.direction == Keys.RIGHT ? 1 : -1) * this.appearance.scale;
+  }
+  canAction(): boolean {
+    return !this.effects.some((s) => {
+      if ('stunned' in s && 'die' in s) {
+        return s.stunned || s.die;
+      }
+      return false;
+    });
+  }
+  clearAnimation() {}
+  changeAnimation(trackIndex: number, animation: string, loop: boolean) {
+    this.clearAnimation();
+    if (this.visualsPet.animation != animation) {
+      this.visualsPet.animation = animation;
+      this.rendererPet.state.setAnimation(trackIndex, animation, loop);
+    }
   }
   private setMixAction() {
     for (var o in n) {

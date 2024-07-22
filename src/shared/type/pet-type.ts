@@ -2,6 +2,7 @@ import { ISkeletonData } from '@pixi-spine/base';
 import { ISpineResource } from '@pixi-spine/loader-base';
 
 import { Keys } from '../constain';
+import { number } from 'zod';
 
 export type InfoType = {
   name: string;
@@ -27,6 +28,13 @@ export type VisualsPet = {
   skin: string;
   animation: string;
   direction: Keys;
+  idle: string;
+};
+export type InfoPetType = InfoType & {
+  id: number;
+};
+export type StatsPetType = StatsType & {
+  projectileImage: string | number;
 };
 export type CustomSkin = Partial<{
   eyes: string;
@@ -39,12 +47,24 @@ export type CustomSkin = Partial<{
   companion: string;
   rod: string;
 }>;
+export type StatsProjectileType = StatsType & {
+  velocity: number;
+  decay: number;
+};
+export type VisualsProjectType = {
+  image: string | number;
+};
+export type InfoProjectileType = InfoType & {
+  autherId: number;
+};
 export type KeysType = Keys;
-export type BaseOptionLayer = PositionType & AppearanceType & InfoType & StatsType;
-export type BackgroundOptionLayer = PositionType & AppearanceType & StatsType;
+export type DynamicOptionLayer = BaseOptionLayer & StatsType;
+export type BaseDeafultLayer = PositionType & AppearanceType & StatsType;
+export type BackgroundOptionLayer = BaseDeafultLayer;
+export type BaseOptionLayer = PositionType & AppearanceType & InfoType;
 export type PetOptionLayer = {
-  info: InfoType;
-  stats: StatsType;
+  info: InfoPetType;
+  stats: StatsPetType;
 
   appearance: AppearanceType;
   position: PositionType;
@@ -53,6 +73,7 @@ export type PetOptionLayer = {
   effect: StatusType[];
   resources: PetContextType;
 };
+export type PorjectileOptionLayer = BaseDeafultLayer & StatsProjectileType & InfoProjectileType & VisualsProjectType;
 
 export type EffectType = {
   type: string;

@@ -1,4 +1,4 @@
-import { Keys } from 'src/shared/constain';
+import { colors, Keys } from 'src/shared/constain';
 import { idleType } from 'src/shared/constain/pet-constain';
 import uuidv4 from 'src/shared/utils/uuidv4';
 
@@ -23,7 +23,7 @@ export const DefaultData = {
     pet: 25,
   },
   speed: {
-    pet: 13,
+    pet: 3,
   },
   attackSpeed: {
     pet: 10,
@@ -47,11 +47,13 @@ export const DefaultInitPet = {
   info: {
     name: 'custom_' + uuidv4(),
     loyalty: DefaultData.loyalty.pet,
+    id: uuidv4(),
   },
   stats: {
     dame: DefaultData.dame.pet,
     speed: DefaultData.speed.pet,
     attackSpeed: DefaultData.attackSpeed.pet,
+    projectileImage: colors[Math.random() * colors.length],
   },
 
   appearance: {
@@ -61,6 +63,8 @@ export const DefaultInitPet = {
   visuals: {
     skin: 'meow',
     animation: idleType[0],
+    idle: idleType[0],
+
     direction: Keys.RIGHT,
   },
   effect: [],
