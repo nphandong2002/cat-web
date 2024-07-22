@@ -4,7 +4,9 @@ import { ISpineResource } from '@pixi-spine/loader-base';
 import { Keys } from '../constain';
 import { number } from 'zod';
 
+export type ActionSever = any;
 export type InfoType = {
+  id?: string;
   name: string;
   loyalty: number;
 };
@@ -59,10 +61,13 @@ export type InfoProjectileType = InfoType & {
 };
 export type KeysType = Keys;
 export type DynamicOptionLayer = BaseOptionLayer & StatsType;
-export type BaseDeafultLayer = PositionType & AppearanceType & StatsType;
+export type BaseDeafultLayer = PositionType & AppearanceType & StatsType & ActionLayer;
 export type BackgroundOptionLayer = BaseDeafultLayer;
-export type BaseOptionLayer = PositionType & AppearanceType & InfoType;
-export type PetOptionLayer = {
+export type ActionLayer = {
+  actionServer: ActionSever;
+};
+export type BaseOptionLayer = PositionType & AppearanceType & InfoType & ActionLayer;
+export type PetOptionLayer = ActionLayer & {
   info: InfoPetType;
   stats: StatsPetType;
 

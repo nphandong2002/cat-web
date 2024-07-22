@@ -13,7 +13,7 @@ type Presence = {
 };
 
 type Storage = {
-  layers: LiveMap<string, LiveObject<petJson>>;
+  layers: LiveMap<string, LiveObject<any>>;
   layerIds: LiveList<string>;
 };
 

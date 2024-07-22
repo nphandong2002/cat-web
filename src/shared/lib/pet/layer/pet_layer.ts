@@ -20,6 +20,7 @@ export class PetLayer extends DynamicLayer {
 
   constructor(option: PetOptionLayer) {
     super({
+      actionServer: option.actionServer,
       ...option.info,
       ...option.appearance,
       ...option.position,

@@ -1,7 +1,8 @@
 import { Keys } from 'src/shared/constain';
-import { BaseLayer } from './base_layer';
 import { moveConfig } from 'src/config/pet-config';
 import { DynamicOptionLayer, KeysType, StatsType, StatusType } from 'src/shared/type/pet-type';
+
+import { BaseLayer } from './base_layer';
 
 export class DynamicLayer extends BaseLayer {
   stats: StatsType;

@@ -4,9 +4,10 @@ import { AppearanceType, BaseOptionLayer, InfoType, PositionType } from 'src/sha
 export class BaseLayer {
   info: InfoType;
   container: Container;
+  mouseXY: PositionType;
   position: PositionType;
   appearance: AppearanceType;
-  mouseXY: PositionType;
+  actionSever: any;
   constructor(option: BaseOptionLayer) {
     this.container = new Container();
     this.position = {
@@ -21,7 +22,7 @@ export class BaseLayer {
       name: option.name,
       loyalty: option.loyalty,
     };
-
+    this.actionSever = option.actionServer;
     this.appearance = {
       height: option.height,
       width: option.width,
@@ -41,7 +42,7 @@ export class BaseLayer {
   update() {}
   setPosition(x: number, y: number) {
     this.position.x = x;
-    this.position.x = y;
+    this.position.y = y;
 
     this.container.position.x = this.position.x;
     this.container.position.y = this.position.y;

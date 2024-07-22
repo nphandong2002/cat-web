@@ -16,13 +16,11 @@ export class ProjectileLayer extends BaseLayer {
   getGraphics(color: number) {
     const graphics = new Graphics();
     graphics.beginFill(color, 1);
-    graphics.drawCircle(0, 0, 50);
+    graphics.drawCircle(0, 0, 10);
     graphics.endFill();
     return graphics;
   }
   update() {
-    console.log(this.position.x + Math.cos(this.stats.velocity) * this.stats.speed);
-
     this.setPosition(
       this.position.x + Math.cos(this.stats.velocity) * this.stats.speed,
       this.position.y + Math.sin(this.stats.velocity) * this.stats.speed,

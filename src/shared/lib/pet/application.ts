@@ -19,6 +19,7 @@ export class ApplicationCustom extends Application {
   allLayers: BaseLayer[];
   container: Container;
   background: BackgroundLayer;
+  actionServer: any;
   constructor(option: any) {
     super({
       ...defaultApplication,
@@ -30,7 +31,9 @@ export class ApplicationCustom extends Application {
       ...option.dataPet,
       resources: option.resources,
     });
+    this.actionServer = option.actionServer;
     this.background = new BackgroundLayer({
+      actionServer: option.actionServer,
       x: this.currentPet.position.x,
       y: this.currentPet.position.y,
       height: this.screen.height,
@@ -96,8 +99,8 @@ export class ApplicationCustom extends Application {
     const keydownHandle = (e: KeyboardEvent) => {
       if (this.currentPet && e.keyCode == 32 && this.currentPet.canAction()) {
         this.addProtitle({
-          x: this.currentPet.container.x - this.currentPet.container.width,
-          y: this.currentPet.container.y - this.currentPet.container.height,
+          x: this.currentPet.container.x,
+          y: this.currentPet.container.y,
           velocity: Math.atan2(
             this.currentPet.mouseXY.y - this.screen.height / 2,
             this.currentPet.mouseXY.x - this.screen.width / 2,
@@ -126,6 +129,7 @@ export class ApplicationCustom extends Application {
     image: string | number;
   }) {
     let p = new ProjectileLayer({
+      actionServer: this.actionServer,
       name: 'projectile',
       loyalty: 100,
       scale: 1,

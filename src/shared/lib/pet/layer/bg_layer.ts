@@ -15,6 +15,7 @@ export class BackgroundLayer extends DynamicLayer {
     const bg = Sprite.from('bg/background.png');
     this.container.addChild(bg);
     this.setPosition();
+    console.log(bg.texture.height, bg.texture.width);
   }
   resize(width: number, height: number) {
     if (width != this.appearance.width || height != this.appearance.height) {
