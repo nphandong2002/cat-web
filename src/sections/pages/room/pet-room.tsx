@@ -12,12 +12,23 @@ function RoomPage() {
   const resources = usePetContext();
   const [application, setapplication] = useState<ApplicationCustom>();
 
-  const updateLayer = useMutation(({ storage }, data) => {
+  const updateCurrentPet = useMutation(({ setMyPresence, self }, data) => {
+    setMyPresence({
+      pet: {
+        ...self.presence.pet,
+        ...data,
+      },
+    });
+  }, []);
+  const updateLayer = useMutation(({ storage, setMyPresence }, data) => {
     const liveLayers = storage.get('layers');
     const layer = liveLayers.get(data.info.id);
 
     if (layer) {
-      layer.update(data);
+      layer.update({
+        ...layer,
+        ...data,
+      });
     }
   }, []);
   const addLayer = useMutation(({ storage }, data) => {
@@ -37,24 +48,27 @@ function RoomPage() {
       if (index !== -1) liveLayersIds.delete(index);
     }
   }, []);
-
   useEffect(() => {
-    if (resources && divRef.current && !divRef.current.querySelector('canvas')) {
+    console.log(users);
+  }, [users]);
+  useEffect(() => {
+    if (resources && divRef.current && !divRef.current.querySelector('canvas') && currentUser) {
       const app = new ApplicationCustom({
         resources: resources,
         dataPet: currentUser.presence.pet,
-        action: {
+        actionServer: {
           updateLayer,
           addLayer,
           deleteLayer,
+          updateCurrentPet,
         },
       });
 
       divRef.current.appendChild(app.view as unknown as HTMLCanvasElement);
-      app.resizeTo = divRef.current;
       setapplication(app);
+      app.resizeTo = divRef.current;
     }
-  }, [divRef, resources, setapplication, currentUser, application]);
+  }, [divRef, resources, setapplication, currentUser, application, updateLayer, addLayer, deleteLayer]);
 
   return <div className="h-screen" ref={divRef}></div>;
 }

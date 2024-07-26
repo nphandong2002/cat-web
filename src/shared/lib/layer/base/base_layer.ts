@@ -1,54 +1,46 @@
 import { Container } from 'pixi.js';
 
-import { AppearanceType, BaseOptionLayer, InfoType, PositionType } from 'src/shared/type/pet-type';
+import { PositionType, ViewPortType } from 'src/shared/type/common-type';
+import { ActionServerType, AppearanceLayerType, BaseLayerType, InfoLayerType } from 'src/shared/type/baselayer-type';
+
 export class BaseLayer {
-  info: InfoType;
+  info: InfoLayerType;
   container: Container;
-  mouseXY: PositionType;
+  viewPort: ViewPortType;
   position: PositionType;
-  appearance: AppearanceType;
-  actionSever: any;
-  constructor(option: BaseOptionLayer) {
+  appearance: AppearanceLayerType;
+  constructor(option: BaseLayerType) {
     this.container = new Container();
-    this.position = {
-      x: option.x,
-      y: option.y,
-    };
-    this.mouseXY = {
-      x: 0,
-      y: 0,
-    };
-    this.info = {
-      name: option.name,
-      loyalty: option.loyalty,
-    };
-    this.actionSever = option.actionServer;
-    this.appearance = {
-      height: option.height,
-      width: option.width,
-      zIndex: option.zIndex,
-      scale: option.scale,
-    };
+    this.position = option.position;
+
+    this.info = option.info;
+    this.appearance = option.appearance;
+    this.viewPort = option.viewPort;
+    this.setDefaultData();
+  }
+  setDefaultData() {
     this.container.x = this.position.x;
     this.container.y = this.position.y;
     this.container.zIndex = this.appearance.zIndex;
     this.container.zOrder = this.appearance.zIndex;
-    this.appearance.height && (this.container.height = this.appearance.height);
-    this.appearance.width && (this.container.width = this.appearance.width);
 
-    this.container.scale.x = this.appearance.scale || 1;
-    this.container.scale.y = this.appearance.scale || 1;
+    this.container.scale.x = this.appearance.scale;
+    this.container.scale.y = this.appearance.scale;
+  }
+  resize(height: number, width: number) {
+    if (this.viewPort.height != height || this.viewPort.width != width) {
+      this.viewPort = { height, width };
+      this.setPosition(this.position.x, this.position.y, false);
+    }
   }
   update() {}
-  setPosition(x: number, y: number) {
-    this.position.x = x;
-    this.position.y = y;
+  setPosition(x: number, y: number, save = true) {
+    if (save) {
+      this.position.x = x;
+      this.position.y = y;
+    }
 
-    this.container.position.x = this.position.x;
-    this.container.position.y = this.position.y;
-  }
-
-  setMousePosition(x: number, y: number) {
-    this.mouseXY = { x, y };
+    this.container.position.x = this.viewPort.width / 2 - x;
+    this.container.position.y = this.viewPort.height / 2 - y;
   }
 }

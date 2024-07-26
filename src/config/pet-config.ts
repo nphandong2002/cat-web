@@ -1,14 +1,14 @@
-import { colors, Keys } from 'src/shared/constain';
-import { idleType } from 'src/shared/constain/pet-constain';
-import uuidv4 from 'src/shared/utils/uuidv4';
+import { colors, Keys } from "src/shared/constain";
+import { idleType, TypeofPet } from "src/shared/constain/pet-constain";
+import uuidv4 from "src/shared/utils/uuidv4";
 
 export const defaultApplication = {
-  backgroundColor: '#fff',
+  backgroundColor: "#fff",
   backgroundAlpha: 0,
   clearBeforeRender: true,
   context: null,
   antialias: true,
-  powerPreference: 'default',
+  powerPreference: "default",
   premultipliedAlpha: true,
   preserveDrawingBuffer: true,
   hello: true,
@@ -41,13 +41,30 @@ export const DefaultData = {
     },
   },
 };
-
+export const DefaultInitBg = {
+  info: {
+    name: "background",
+    loyalty: 0,
+    id: uuidv4(),
+    type: TypeofPet.BG,
+  },
+  appearance: {
+    zIndex: zindex.bg,
+    scale: DefaultData.scale.pet,
+  },
+  stats: {
+    dame: DefaultData.dame.pet,
+    speed: DefaultData.speed.pet,
+    attackSpeed: DefaultData.attackSpeed.pet,
+  },
+};
 export const DefaultInitPet = {
   position: DefaultData.position.pet,
   info: {
-    name: 'custom_' + uuidv4(),
+    name: "custom_" + uuidv4(),
     loyalty: DefaultData.loyalty.pet,
     id: uuidv4(),
+    type: TypeofPet.PET,
   },
   stats: {
     dame: DefaultData.dame.pet,
@@ -60,14 +77,14 @@ export const DefaultInitPet = {
     zIndex: zindex.pet,
     scale: DefaultData.scale.pet,
   },
-  visuals: {
-    skin: 'meow',
+  visual: {
+    skin: "meow",
     animation: idleType[0],
     idle: idleType[0],
 
     direction: Keys.RIGHT,
   },
-  effect: [],
+  status: [],
 };
 
 export const moveConfig = {

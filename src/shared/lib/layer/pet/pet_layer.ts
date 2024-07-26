@@ -1,40 +1,26 @@
-import { InfoPetType, StatsPetType, VisualsPet } from '../../../type/pet-type';
 import { Skin, Spine, SkeletonData } from '@pixi-spine/runtime-4.1';
 
-import { colors, Keys } from 'src/shared/constain';
+import { Keys } from 'src/shared/constain';
 import { action, feeling, idleType } from 'src/shared/constain/pet-constain';
-import { PetContextType, PetOptionLayer } from 'src/shared/type/pet-type';
+import { PetContextType, PetOptionLayer, StatsPetType, VisualsPet } from 'src/shared/type/pet-type';
 
-import { zindex } from 'src/config/pet-config';
-import { DynamicLayer } from '../../layer/base/dynamic_layer';
+import { DynamicLayer } from '../base';
+import { Graphics } from 'pixi.js';
 
 var n = idleType,
   i = feeling,
   a = action;
 export class PetLayer extends DynamicLayer {
-  resources: PetContextType;
   rendererPet: Spine;
+  resources: PetContextType;
   visualsPet: VisualsPet;
-  info: InfoPetType;
   stats: StatsPetType;
 
   constructor(option: PetOptionLayer) {
-    super({
-      actionServer: option.actionServer,
-      ...option.info,
-      ...option.appearance,
-      ...option.position,
-      ...option.stats,
-      zIndex: zindex.pet,
-    });
-    this.info = {
-      ...option.info,
-    };
-    this.stats = {
-      ...option.stats,
-    };
-    this.visualsPet = option.visuals;
+    super(option);
+    this.visualsPet = option.visual;
     this.resources = option.resources;
+    this.stats = option.stats;
     this.rendererPet = new Spine(this.resources.cat.spineData as SkeletonData);
 
     this.init();
@@ -46,6 +32,23 @@ export class PetLayer extends DynamicLayer {
     this.rendererPet.state.setAnimation(0, this.visualsPet.idle, true);
     this.container.addChild(this.rendererPet);
   }
+  getGraphics(color: number) {
+    const graphics = new Graphics();
+    graphics.beginFill(color, 1);
+    graphics.drawCircle(0, 0, 20);
+    graphics.endFill();
+    return graphics;
+  }
+  setDefaultData() {
+    this.container.x = this.position.x;
+    this.container.y = this.position.y;
+    this.container.zIndex = this.appearance.zIndex;
+    this.container.zOrder = this.appearance.zIndex;
+
+    this.container.scale.x =
+      (this.visualsPet && this.visualsPet.direction == Keys.LEFT ? -1 : 1) * this.appearance.scale;
+    this.container.scale.y = this.appearance.scale;
+  }
   changeSkin(skin: string) {
     this.visualsPet.skin = (this.resources.cat.spineData.findSkin('skins/' + skin) && skin) || 'meow';
     this.rendererPet.skeleton.setSkinByName('skins/' + skin);
@@ -56,19 +59,9 @@ export class PetLayer extends DynamicLayer {
     this.rendererPet.skeleton.setToSetupPose();
   }
   update() {
-    this.changeAnimation(0, this.key.length ? 'walk' : this.visualsPet.idle, true);
-    [Keys.RIGHT, Keys.LEFT].some((a) => a === this.key[0]) &&
-      (this.visualsPet.direction = this.key[0] == Keys.LEFT ? Keys.LEFT : Keys.RIGHT);
     this.container.scale.x = (this.visualsPet.direction == Keys.RIGHT ? 1 : -1) * this.appearance.scale;
   }
-  canAction(): boolean {
-    return !this.effects.some((s) => {
-      if ('stunned' in s && 'die' in s) {
-        return s.stunned || s.die;
-      }
-      return false;
-    });
-  }
+
   clearAnimation() {}
   changeAnimation(trackIndex: number, animation: string, loop: boolean) {
     this.clearAnimation();

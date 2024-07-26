@@ -1,16 +1,14 @@
-import { Graphics, Sprite } from 'pixi.js';
+import { Graphics, Sprite } from "pixi.js";
 
-import { PorjectileOptionLayer, StatsProjectileType } from 'src/shared/type/pet-type';
-import { BaseLayer } from '../../layer/base/base_layer';
+import { PorjectileOptionLayer, StatsProjectileType } from "src/shared/type/pet-type";
+import { BaseLayer } from "../../layer/base/base_layer";
 
 export class ProjectileLayer extends BaseLayer {
   stats: StatsProjectileType;
   constructor(option: PorjectileOptionLayer) {
     super(option);
-    this.stats = {
-      ...option,
-    };
-    const projectile = typeof option.image == 'string' ? Sprite.from(option.image) : this.getGraphics(option.image);
+    this.stats = option.stats;
+    const projectile = this.getGraphics(option.visual.image);
     this.container.addChild(projectile);
   }
   getGraphics(color: number) {
@@ -19,11 +17,5 @@ export class ProjectileLayer extends BaseLayer {
     graphics.drawCircle(0, 0, 10);
     graphics.endFill();
     return graphics;
-  }
-  update() {
-    this.setPosition(
-      this.position.x + Math.cos(this.stats.velocity) * this.stats.speed,
-      this.position.y + Math.sin(this.stats.velocity) * this.stats.speed,
-    );
   }
 }
